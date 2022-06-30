@@ -1,14 +1,20 @@
-package ru.t1.dedov.entity;
+package ru.t1.dedov.model.entity;
 
-import lombok.Data;
-import ru.t1.dedov.entity.enums.Role;
+import lombok.*;
+import org.hibernate.Hibernate;
+import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Table(name = "employee")
 public class Employee {
 
@@ -16,6 +22,9 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @OneToOne(mappedBy = "employee")
+    private Schedule schedule;
 
     @Column(name = "first_name")
     private String firstName;
@@ -33,7 +42,7 @@ public class Employee {
     private Role role;
 
     @Column(name = "date_of_birth")
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "home_address")
     private String homeAddress;
@@ -46,4 +55,17 @@ public class Employee {
 
     @Column(name = "salary")
     private BigDecimal salary;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Employee employee = (Employee) o;
+        return id != null && Objects.equals(id, employee.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

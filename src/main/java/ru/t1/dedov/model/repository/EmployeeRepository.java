@@ -1,7 +1,7 @@
-package ru.t1.dedov.repository;
+package ru.t1.dedov.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.t1.dedov.entity.Employee;
+import ru.t1.dedov.model.entity.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 }
