@@ -1,11 +1,15 @@
 package ru.t1.dedov.model.entity;
 
-
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -27,10 +31,14 @@ public class Card {
     private LocalDateTime dateOfExpiration;
 
     @Column(name = "price")
-    private Integer price;
+    private BigDecimal price;
 
-    @OneToOne(mappedBy = "card")
+    @ManyToOne
     private Client client;
+
+    @ManyToMany
+    @ToString.Exclude
+    private List<TrainingType> trainingTypes;
 
     @Override
     public boolean equals(Object o) {

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,8 +24,11 @@ public class Employee {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(mappedBy = "employee")
+    @ManyToOne
     private Schedule schedule;
+
+    @ManyToMany
+    private List<TrainingType> trainingTypes;
 
     @Column(name = "first_name")
     private String firstName;

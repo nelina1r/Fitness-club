@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,18 +19,14 @@ public class Gym {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(mappedBy = "gym")
+    @ManyToOne
     private Schedule schedule;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
-    @OneToOne
-    @JoinColumn(name = "store_id", referencedColumnName = "id")
-    private Store store;
+    @Column(name = "people_capacity")
+    private String peopleCapacity;
 
     @Override
     public boolean equals(Object o) {

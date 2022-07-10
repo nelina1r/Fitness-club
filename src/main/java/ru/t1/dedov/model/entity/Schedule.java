@@ -7,7 +7,9 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,23 +24,23 @@ public class Schedule {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    private Employee employee;
+    @OneToMany(mappedBy = "schedule")
+    private List<Employee> employeeList;
 
-    @OneToOne
-    @JoinColumn(name = "client_id", referencedColumnName = "id")
-    private Client client;
+    @ManyToMany
+    private List<Client> clientList;
 
-    @OneToOne
-    @JoinColumn(name = "gym_id", referencedColumnName = "id")
-    private Gym gym;
+    @OneToMany(mappedBy = "schedule")
+    private List<Gym> gymList;
 
-    @Column(name = "start_date_time")
-    private LocalDateTime startDateTime;
+    @Column(name = "day_of_training")
+    private LocalDate dayOfTraining;
 
-    @Column(name = "end_date_time")
-    private LocalDateTime endDateTime;
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
+    @Column(name = "end_time")
+    private LocalTime endTime;
 
     @Override
     public boolean equals(Object o) {

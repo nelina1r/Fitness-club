@@ -4,7 +4,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,27 +11,26 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table(name = "store")
-public class Store {
+@Table(name = "training_type")
+public class TrainingType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    private Employee employee;
+    @Column(name = "name")
+    private String name;
 
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<Product> productList;
+    @Column(name = "people_capacity")
+    private String peopleCapacity;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Store store = (Store) o;
-        return id != null && Objects.equals(id, store.id);
+        TrainingType that = (TrainingType) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
