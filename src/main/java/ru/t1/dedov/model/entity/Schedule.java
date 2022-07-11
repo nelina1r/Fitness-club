@@ -24,8 +24,8 @@ public class Schedule {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "schedule")
-    private List<Employee> employeeList;
+    @ManyToOne
+    private Employee employee;
 
     @ManyToMany
     private List<Client> clientList;

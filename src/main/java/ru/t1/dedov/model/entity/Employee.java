@@ -1,13 +1,15 @@
 package ru.t1.dedov.model.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,8 +26,8 @@ public class Employee {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne
-    private Schedule schedule;
+    @OneToMany
+    private List<Schedule> scheduleList;
 
     @ManyToMany
     private List<TrainingType> trainingTypes;
