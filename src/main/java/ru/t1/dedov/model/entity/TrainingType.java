@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +19,12 @@ public class TrainingType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @ManyToMany(mappedBy = "trainingTypes")
+    private List<Employee> employeeList;
+
+    @ManyToMany(mappedBy = "trainingTypes")
+    private List<Card> cardList;
 
     @Column(name = "name")
     private String name;

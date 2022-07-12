@@ -30,8 +30,8 @@ public class Schedule {
     @ManyToMany
     private List<Client> clientList;
 
-    @OneToMany(mappedBy = "schedule")
-    private List<Gym> gymList;
+    @ManyToOne
+    private Gym gym;
 
     @Column(name = "day_of_training")
     private LocalDate dayOfTraining;

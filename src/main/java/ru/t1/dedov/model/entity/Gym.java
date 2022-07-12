@@ -19,8 +19,8 @@ public class Gym {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne
-    private Schedule schedule;
+    @OneToMany(mappedBy = "gym")
+    private List<Schedule> scheduleList;
 
     @Column(name = "name")
     private String name;

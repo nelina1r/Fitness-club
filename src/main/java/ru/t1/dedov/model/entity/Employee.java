@@ -26,7 +26,7 @@ public class Employee {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToMany
+    @OneToMany(mappedBy = "employee")
     private List<Schedule> scheduleList;
 
     @ManyToMany
