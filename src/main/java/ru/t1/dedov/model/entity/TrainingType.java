@@ -26,11 +26,8 @@ public class TrainingType {
     @ManyToMany(mappedBy = "trainingTypes")
     private List<Card> cardList;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
-
-    @Column(name = "people_capacity")
-    private String peopleCapacity;
 
     @Override
     public boolean equals(Object o) {

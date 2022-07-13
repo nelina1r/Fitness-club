@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import ru.t1.dedov.model.entity.enums.Gender;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -41,14 +42,17 @@ public class Client {
     @Column(name = "home_address")
     private String homeAddress;
 
-    @Column(name = "sex")
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 14)
     private String phoneNumber;
 
     @OneToMany(mappedBy = "client")
     private List<Card> cardList;
+
+    @ManyToMany(mappedBy = "clientList")
+    private List<Schedule> scheduleList;
 
     @Override
     public boolean equals(Object o) {

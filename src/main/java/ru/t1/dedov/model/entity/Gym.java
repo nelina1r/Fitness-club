@@ -22,11 +22,11 @@ public class Gym {
     @OneToMany(mappedBy = "gym")
     private List<Schedule> scheduleList;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column(name = "people_capacity")
-    private String peopleCapacity;
+    private Integer peopleCapacity;
 
     @Override
     public boolean equals(Object o) {

@@ -30,7 +30,7 @@ public class Card {
     @Column(name = "date_of_expiration")
     private LocalDateTime dateOfExpiration;
 
-    @Column(name = "price")
+    @Column(name = "price", scale = 2)
     private BigDecimal price;
 
     @ManyToOne

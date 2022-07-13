@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import ru.t1.dedov.model.entity.enums.Gender;
 import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
@@ -41,7 +42,7 @@ public class Employee {
     @Column(name = "patronymic")
     private String patronymic;
 
-    @Column(name = "passport")
+    @Column(name = "passport", unique = true)
     private String passport;
 
     @Enumerated(EnumType.STRING)
@@ -53,13 +54,13 @@ public class Employee {
     @Column(name = "home_address")
     private String homeAddress;
 
-    @Column(name = "sex")
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 14)
     private String phoneNumber;
 
-    @Column(name = "salary")
+    @Column(name = "salary", scale = 2)
     private BigDecimal salary;
 
     @Override

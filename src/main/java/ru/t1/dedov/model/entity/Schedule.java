@@ -7,8 +7,7 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +16,10 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table(name = "schedule")
+@Table(
+        name = "schedule",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"employee_id", "training_start_date_time"})
+)
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,14 +35,14 @@ public class Schedule {
     @ManyToOne
     private Gym gym;
 
-    @Column(name = "day_of_training")
-    private LocalDate dayOfTraining;
+    @Column(name = "training_start_date_time")
+    private LocalDateTime trainingStartDateTime;
 
-    @Column(name = "start_time")
-    private LocalTime startTime;
+    @Column(name = "training_duration")
+    private Integer trainingDuration;
 
-    @Column(name = "end_time")
-    private LocalTime endTime;
+    @Column(name = "people_capacity")
+    private Integer peopleCapacity;
 
     @Override
     public boolean equals(Object o) {
