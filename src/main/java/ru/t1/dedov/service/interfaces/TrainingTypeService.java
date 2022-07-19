@@ -9,7 +9,7 @@ public interface TrainingTypeService {
 
     TrainingTypeDto findById(Long id);
 
-    TrainingTypeDto save(TrainingTypeDto scheduleDto);
+    TrainingTypeDto save(TrainingTypeDto trainingTypeDto);
 
     void deleteById(Long id);
 }

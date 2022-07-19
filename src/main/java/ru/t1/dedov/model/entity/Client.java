@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 import ru.t1.dedov.model.entity.enums.Gender;
+import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -38,6 +39,9 @@ public class Client {
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "home_address")
     private String homeAddress;

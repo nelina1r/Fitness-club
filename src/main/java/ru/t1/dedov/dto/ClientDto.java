@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import ru.t1.dedov.model.entity.Card;
 import ru.t1.dedov.model.entity.Schedule;
 import ru.t1.dedov.model.entity.enums.Gender;
+import ru.t1.dedov.model.entity.enums.Role;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,6 +27,8 @@ public class ClientDto {
     private String passport;
 
     private LocalDate dateOfBirth;
+
+    private Role role;
 
     private String homeAddress;
 

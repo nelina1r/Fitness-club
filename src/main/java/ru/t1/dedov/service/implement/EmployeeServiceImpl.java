@@ -1,28 +1,42 @@
 package ru.t1.dedov.service.implement;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.EmployeeDto;
+import ru.t1.dedov.mapper.EmployeeMapper;
+import ru.t1.dedov.model.repository.EmployeeRepository;
 import ru.t1.dedov.service.interfaces.EmployeeService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
+@RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
+    private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper employeeMapper;
+
     @Override
     public List<EmployeeDto> findAll() {
-        return null;
+        return employeeRepository.findAll()
+                .stream()
+                .map(employeeMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public EmployeeDto findById(Long id) {
-        return null;
+        return employeeMapper.toDto(employeeRepository.findById(id).get());
     }
 
     @Override
     public EmployeeDto save(EmployeeDto employeeDto) {
-        return null;
+        employeeRepository.save(employeeMapper.toEntity(employeeDto));
+        return employeeDto;
     }
 
     @Override
     public void deleteById(Long id) {
-
+        employeeRepository.deleteById(id);
     }
 }
