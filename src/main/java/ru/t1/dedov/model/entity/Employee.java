@@ -9,6 +9,7 @@ import ru.t1.dedov.model.entity.enums.Gender;
 import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Table(name = "employee")
-public class Employee {
+public class Employee extends User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +45,6 @@ public class Employee {
 
     @Column(name = "passport", unique = true)
     private String passport;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
