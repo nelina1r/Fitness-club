@@ -1,12 +1,8 @@
 package ru.t1.dedov.model.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 import ru.t1.dedov.model.entity.enums.Gender;
-import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,10 +17,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Table(name = "client")
 public class Client extends User implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -51,9 +43,11 @@ public class Client extends User implements Serializable {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "client")
+    @ToString.Exclude
     private List<Card> cardList;
 
     @ManyToMany(mappedBy = "clientList")
+    @ToString.Exclude
     private List<Schedule> scheduleList;
 
     @Override
@@ -61,7 +55,7 @@ public class Client extends User implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Client client = (Client) o;
-        return id != null && Objects.equals(id, client.id);
+        return getId() != null && Objects.equals(getId(), client.getId());
     }
 
     @Override

@@ -1,6 +1,8 @@
 package ru.t1.dedov.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.t1.dedov.model.entity.Card;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ClientDto {
 
     @JsonIgnore
@@ -27,8 +31,6 @@ public class ClientDto {
     private String passport;
 
     private LocalDate dateOfBirth;
-
-    private Role role;
 
     private String homeAddress;
 

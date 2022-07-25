@@ -1,12 +1,8 @@
 package ru.t1.dedov.model.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 import ru.t1.dedov.model.entity.enums.Gender;
-import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,15 +19,12 @@ import java.util.Objects;
 @Table(name = "employee")
 public class Employee extends User implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
     @OneToMany(mappedBy = "employee")
+    @ToString.Exclude
     private List<Schedule> scheduleList;
 
     @ManyToMany
+    @ToString.Exclude
     private List<TrainingType> trainingTypes;
 
     @Column(name = "first_name")
@@ -66,7 +59,7 @@ public class Employee extends User implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Employee employee = (Employee) o;
-        return id != null && Objects.equals(id, employee.id);
+        return getId() != null && Objects.equals(getId(), employee.getId());
     }
 
     @Override

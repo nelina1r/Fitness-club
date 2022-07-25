@@ -1,8 +1,8 @@
 package ru.t1.dedov.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.t1.dedov.model.entity.Schedule;
 import ru.t1.dedov.model.entity.TrainingType;
 import ru.t1.dedov.model.entity.enums.Gender;
@@ -14,6 +14,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EmployeeDto {
 
     @JsonIgnore
@@ -26,8 +28,6 @@ public class EmployeeDto {
     private String patronymic;
 
     private String passport;
-
-    private Role role;
 
     private LocalDate dateOfBirth;
 
