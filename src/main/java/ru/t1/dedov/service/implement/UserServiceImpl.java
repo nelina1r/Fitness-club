@@ -18,7 +18,6 @@ import ru.t1.dedov.model.repository.UserRepository;
 import ru.t1.dedov.service.interfaces.UserService;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public void register(PersonRegistrationDto personRegistrationDto) {
         User user = User.builder()
                 .username(personRegistrationDto.getUsername())
-                .password(personRegistrationDto.getPassword())
+                .password(passwordEncoder.encode(personRegistrationDto.getPassword()))
                 .role(personRegistrationDto.getRole())
                 .build();
         userRepository.save(user);
@@ -83,16 +82,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findByUsername(String username) {
-        return null;
+        return userMapper.toDto(userRepository.findByUsername(username));
     }
 
     @Override
     public UserDto findUserById(Long id) {
-        return null;
+        return userMapper.toDto(userRepository.findById(id).get());
     }
 
     @Override
     public void deleteUserById(Long id) {
-
+        userRepository.deleteById(id);
     }
 }
