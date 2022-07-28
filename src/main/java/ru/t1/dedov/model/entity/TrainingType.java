@@ -1,11 +1,14 @@
 package ru.t1.dedov.model.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,12 +24,12 @@ public class TrainingType {
     private Long id;
 
     @ManyToMany(mappedBy = "trainingTypes")
-    private List<Employee> employeeList;
+    private Set<Employee> employeeList;
 
     @ManyToMany(mappedBy = "trainingTypes")
-    private List<Card> cardList;
+    private Set<Card> cardList;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Override

@@ -8,8 +8,8 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,18 +30,18 @@ public class Schedule {
     private Employee employee;
 
     @ManyToMany
-    private List<Client> clientList;
+    private Set<Client> clientList;
 
     @ManyToOne
     private Gym gym;
 
-    @Column(name = "training_start_date_time")
+    @Column(name = "training_start_date_time", nullable = false)
     private LocalDateTime trainingStartDateTime;
 
-    @Column(name = "training_duration")
+    @Column(name = "training_duration", nullable = false)
     private Integer trainingDuration;
 
-    @Column(name = "people_capacity")
+    @Column(name = "people_capacity", nullable = false)
     private Integer peopleCapacity;
 
     @Override

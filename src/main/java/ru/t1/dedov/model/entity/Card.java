@@ -1,5 +1,6 @@
 package ru.t1.dedov.model.entity;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,8 +10,8 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,21 +25,22 @@ public class Card {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "date_of_purchase")
+    @Column(name = "date_of_purchase", nullable = false)
     private LocalDateTime dateOfPurchase;
 
-    @Column(name = "date_of_expiration")
+    @Column(name = "date_of_expiration", nullable = false)
     private LocalDateTime dateOfExpiration;
 
-    @Column(name = "price", scale = 2)
+    @Column(name = "price", scale = 2, nullable = false)
     private BigDecimal price;
 
     @ManyToOne
+    @NotNull
     private Client client;
 
     @ManyToMany
     @ToString.Exclude
-    private List<TrainingType> trainingTypes;
+    private Set<TrainingType> trainingTypes;
 
     @Override
     public boolean equals(Object o) {

@@ -22,10 +22,10 @@ public class Gym {
     @OneToMany(mappedBy = "gym")
     private List<Schedule> scheduleList;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @Column(name = "people_capacity")
+    @Column(name = "people_capacity", nullable = false)
     private Integer peopleCapacity;
 
     @Override
