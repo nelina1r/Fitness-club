@@ -1,11 +1,7 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.t1.dedov.dto.ClientDto;
-import ru.t1.dedov.dto.EmployeeDto;
 import ru.t1.dedov.dto.PersonRegistrationDto;
 import ru.t1.dedov.dto.UserDto;
 import ru.t1.dedov.mapper.ClientMapper;
@@ -31,44 +27,16 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final EmployeeMapper employeeMapper;
     private final ClientMapper clientMapper;
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public void register(PersonRegistrationDto personRegistrationDto) {
-        User user = User.builder()
+      /*  User user = User.builder()
                 .username(personRegistrationDto.getUsername())
-                .password(passwordEncoder.encode(personRegistrationDto.getPassword()))
+             //   .password(passwordEncoder.encode(personRegistrationDto.getPassword()))
                 .role(personRegistrationDto.getRole())
-                .build();
-        userRepository.save(user);
-        if (personRegistrationDto.getSalary() != null) {
-            EmployeeDto employeeDto = EmployeeDto.builder()
-                    .firstName(personRegistrationDto.getFirstName())
-                    .lastName(personRegistrationDto.getLastName())
-                    .patronymic(personRegistrationDto.getPatronymic())
-                    .passport(personRegistrationDto.getPassport())
-                    .dateOfBirth(personRegistrationDto.getDateOfBirth())
-                    .homeAddress(personRegistrationDto.getHomeAddress())
-                    .gender(personRegistrationDto.getGender())
-                    .phoneNumber(personRegistrationDto.getPhoneNumber())
-                    .salary(personRegistrationDto.getSalary())
-                    .build();
-            employeeRepository.save(employeeMapper.toEntity(employeeDto));
-        } else {
-            ClientDto clientDto = ClientDto.builder()
-                    .firstName(personRegistrationDto.getFirstName())
-                    .lastName(personRegistrationDto.getLastName())
-                    .patronymic(personRegistrationDto.getPatronymic())
-                    .passport(personRegistrationDto.getPassport())
-                    .dateOfBirth(personRegistrationDto.getDateOfBirth())
-                    .homeAddress(personRegistrationDto.getHomeAddress())
-                    .gender(personRegistrationDto.getGender())
-                    .phoneNumber(personRegistrationDto.getPhoneNumber())
-                    .build();
-            clientRepository.save(clientMapper.toEntity(clientDto));
-        }
+                .build();*/
+      //  userRepository.save(user);
     }
 
     @Override
@@ -94,4 +62,5 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
+
 }

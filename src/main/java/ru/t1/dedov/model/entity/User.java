@@ -2,6 +2,8 @@ package ru.t1.dedov.model.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
@@ -15,7 +17,8 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements Serializable {
 
@@ -34,6 +37,8 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    private boolean deleted = Boolean.FALSE;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,4 +51,5 @@ public class User implements Serializable {
     public int hashCode() {
         return getClass().hashCode();
     }
+
 }

@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import ru.t1.dedov.model.entity.enums.Gender;
 
 import javax.persistence.*;
@@ -19,6 +21,8 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "employee")
 public class Employee extends User implements Serializable {
 
@@ -57,6 +61,8 @@ public class Employee extends User implements Serializable {
 
     @Column(name = "salary", scale = 2, nullable = false)
     private BigDecimal salary;
+
+    private boolean deleted = Boolean.FALSE;
 
     @Override
     public boolean equals(Object o) {

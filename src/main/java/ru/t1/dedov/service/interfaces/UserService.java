@@ -16,4 +16,6 @@ public interface UserService {
     UserDto findUserById(Long id);
 
     void deleteUserById(Long id);
+
+    //UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }

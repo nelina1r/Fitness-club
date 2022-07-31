@@ -3,6 +3,7 @@ package ru.t1.dedov.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import ru.t1.dedov.model.entity.enums.Role;
 
 @Data

@@ -1,17 +1,24 @@
 package ru.t1.dedov.model.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "gym")
 public class Gym {
     @Id
@@ -20,13 +27,15 @@ public class Gym {
     private Long id;
 
     @OneToMany(mappedBy = "gym")
-    private List<Schedule> scheduleList;
+    private Set<Schedule> scheduleList;
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Column(name = "people_capacity", nullable = false)
     private Integer peopleCapacity;
+
+    private boolean deleted = Boolean.FALSE;
 
     @Override
     public boolean equals(Object o) {

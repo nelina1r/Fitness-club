@@ -7,6 +7,7 @@ import ru.t1.dedov.mapper.CardMapper;
 import ru.t1.dedov.model.repository.CardRepository;
 import ru.t1.dedov.service.interfaces.CardService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional
     public CardDto save(CardDto cardDto) {
         cardRepository.save(cardMapper.toEntity(cardDto));
         return cardDto;

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import ru.t1.dedov.model.entity.Client;
 import ru.t1.dedov.model.entity.Employee;
 import ru.t1.dedov.model.entity.Gym;
+import ru.t1.dedov.model.entity.TrainingType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,8 @@ public class ScheduleDto {
     private Employee employee;
 
     private Gym gym;
+
+    private TrainingType trainingType;
 
     private LocalDateTime trainingStartDateTime;
 

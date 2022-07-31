@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,6 +18,8 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(
         name = "schedule",
         uniqueConstraints = @UniqueConstraint(columnNames = {"employee_id", "training_start_date_time"})
@@ -26,14 +30,18 @@ public class Schedule {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne
-    private Employee employee;
-
     @ManyToMany
+    @ToString.Exclude
     private Set<Client> clientList;
 
     @ManyToOne
     private Gym gym;
+    
+    @ManyToOne
+    private Employee employee;
+
+    @ManyToOne
+    private TrainingType trainingType;
 
     @Column(name = "training_start_date_time", nullable = false)
     private LocalDateTime trainingStartDateTime;
@@ -44,6 +52,8 @@ public class Schedule {
     @Column(name = "people_capacity", nullable = false)
     private Integer peopleCapacity;
 
+    private boolean deleted = Boolean.FALSE;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,6 +61,7 @@ public class Schedule {
         Schedule schedule = (Schedule) o;
         return id != null && Objects.equals(id, schedule.id);
     }
+
 
     @Override
     public int hashCode() {

@@ -1,11 +1,12 @@
 package ru.t1.dedov.model.entity;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -18,6 +19,8 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "card")
 public class Card {
     @Id
@@ -35,12 +38,13 @@ public class Card {
     private BigDecimal price;
 
     @ManyToOne
-    @NotNull
     private Client client;
 
     @ManyToMany
     @ToString.Exclude
     private Set<TrainingType> trainingTypes;
+
+    private boolean deleted = Boolean.FALSE;
 
     @Override
     public boolean equals(Object o) {

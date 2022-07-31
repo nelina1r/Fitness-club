@@ -2,6 +2,7 @@ package ru.t1.dedov.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.t1.dedov.model.entity.Schedule;
 import ru.t1.dedov.model.entity.TrainingType;
@@ -15,7 +16,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class EmployeeDto {
 
     @JsonIgnore

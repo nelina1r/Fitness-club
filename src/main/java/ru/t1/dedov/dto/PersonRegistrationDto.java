@@ -13,9 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PersonRegistrationDto {
 
-    @JsonIgnore
-    private Long id;
-
     private String username;
 
     private String password;

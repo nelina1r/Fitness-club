@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -15,6 +17,8 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "training_type")
 public class TrainingType {
 
@@ -29,8 +33,13 @@ public class TrainingType {
     @ManyToMany(mappedBy = "trainingTypes")
     private Set<Card> cardList;
 
+    @OneToMany(mappedBy = "trainingType")
+    private Set<Schedule> scheduleList;
+
     @Column(name = "name", unique = true, nullable = false)
     private String name;
+
+    private boolean deleted = Boolean.FALSE;
 
     @Override
     public boolean equals(Object o) {

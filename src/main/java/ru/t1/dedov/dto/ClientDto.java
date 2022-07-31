@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import ru.t1.dedov.model.entity.Card;
 import ru.t1.dedov.model.entity.Schedule;
 import ru.t1.dedov.model.entity.enums.Gender;
@@ -16,7 +17,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ClientDto {
 
     @JsonIgnore

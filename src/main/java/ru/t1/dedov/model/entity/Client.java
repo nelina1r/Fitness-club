@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import ru.t1.dedov.model.entity.enums.Gender;
 
 import javax.persistence.*;
@@ -18,6 +20,8 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "client")
 public class Client extends User implements Serializable {
 
@@ -53,6 +57,8 @@ public class Client extends User implements Serializable {
     @ManyToMany(mappedBy = "clientList")
     @ToString.Exclude
     private Set<Schedule> scheduleList;
+
+    private boolean deleted = Boolean.FALSE;
 
     @Override
     public boolean equals(Object o) {

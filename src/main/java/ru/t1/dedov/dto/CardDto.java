@@ -2,15 +2,18 @@ package ru.t1.dedov.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.t1.dedov.model.entity.Client;
 import ru.t1.dedov.model.entity.TrainingType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class CardDto {
 
@@ -25,5 +28,5 @@ public class CardDto {
 
     private Client client;
 
-    private List<TrainingType> trainingTypes;
+    private Set<TrainingType> trainingTypes;
 }
