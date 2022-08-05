@@ -1,5 +1,6 @@
 package ru.t1.dedov.model.entity;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -38,6 +39,7 @@ public class Card {
     private BigDecimal price;
 
     @ManyToOne
+    @NotNull
     private Client client;
 
     @ManyToMany

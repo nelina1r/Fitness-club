@@ -26,14 +26,6 @@ import java.util.Set;
 @Table(name = "employee")
 public class Employee extends User implements Serializable {
 
-    @OneToMany(mappedBy = "employee")
-    @ToString.Exclude
-    private Set<Schedule> scheduleList;
-
-    @ManyToMany
-    @ToString.Exclude
-    private Set<TrainingType> trainingTypes;
-
     @Column(name = "first_name", nullable = false)
     private String firstName;
 

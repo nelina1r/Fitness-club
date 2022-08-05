@@ -22,7 +22,7 @@ import java.util.Set;
 @Where(clause = "deleted=false")
 @Table(
         name = "schedule",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"employee_id", "training_start_date_time"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"employee_training_type_employee_id", "training_start_date_time"})
 )
 public class Schedule {
     @Id
@@ -30,18 +30,15 @@ public class Schedule {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @OneToOne
+    private EmployeeTrainingType employeeTrainingType;
+
     @ManyToMany
     @ToString.Exclude
     private Set<Client> clientList;
 
     @ManyToOne
     private Gym gym;
-    
-    @ManyToOne
-    private Employee employee;
-
-    @ManyToOne
-    private TrainingType trainingType;
 
     @Column(name = "training_start_date_time", nullable = false)
     private LocalDateTime trainingStartDateTime;

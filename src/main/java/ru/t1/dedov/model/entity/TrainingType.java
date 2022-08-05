@@ -28,13 +28,8 @@ public class TrainingType {
     private Long id;
 
     @ManyToMany(mappedBy = "trainingTypes")
-    private Set<Employee> employeeList;
-
-    @ManyToMany(mappedBy = "trainingTypes")
     private Set<Card> cardList;
 
-    @OneToMany(mappedBy = "trainingType")
-    private Set<Schedule> scheduleList;
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;
