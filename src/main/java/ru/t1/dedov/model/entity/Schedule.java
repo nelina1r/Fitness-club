@@ -30,7 +30,7 @@ public class Schedule {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private EmployeeTrainingType employeeTrainingType;
 
     @ManyToMany
