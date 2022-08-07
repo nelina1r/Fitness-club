@@ -1,6 +1,7 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.PersonRegistrationDto;
 import ru.t1.dedov.dto.UserDto;
@@ -8,6 +9,7 @@ import ru.t1.dedov.mapper.ClientMapper;
 import ru.t1.dedov.mapper.EmployeeMapper;
 import ru.t1.dedov.mapper.UserMapper;
 import ru.t1.dedov.model.entity.User;
+import ru.t1.dedov.model.entity.enums.Role;
 import ru.t1.dedov.model.repository.ClientRepository;
 import ru.t1.dedov.model.repository.EmployeeRepository;
 import ru.t1.dedov.model.repository.UserRepository;
@@ -22,21 +24,17 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final EmployeeRepository employeeRepository;
-    private final ClientRepository clientRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final EmployeeMapper employeeMapper;
-    private final ClientMapper clientMapper;
 
     @Override
     @Transactional
     public void register(PersonRegistrationDto personRegistrationDto) {
-      /*  User user = User.builder()
-                .username(personRegistrationDto.getUsername())
-             //   .password(passwordEncoder.encode(personRegistrationDto.getPassword()))
-                .role(personRegistrationDto.getRole())
-                .build();*/
-      //  userRepository.save(user);
+        User user = new User();
+        user.setUsername(personRegistrationDto.getUsername());
+        user.setPassword(passwordEncoder.encode(personRegistrationDto.getPassword()));
+        user.setRole(Role.USER);
+        userRepository.save(user);
     }
 
     @Override
@@ -49,8 +47,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findByUsername(String username) {
-        return userMapper.toDto(userRepository.findByUsername(username).get());
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).get();
     }
 
     @Override

@@ -13,3 +13,9 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+
+jwt-token:
+  secret-key: jwtFSEvgSvfsevGe43ybt7gupbhxfFDgvsbjnidt21rt7kkfhjreryhx
+  durability: 3600000
+
+            //  -Dspring.profiles.active=test - VM options
