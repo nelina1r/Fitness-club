@@ -1,6 +1,7 @@
 package ru.t1.dedov.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.GymDto;
 import ru.t1.dedov.service.interfaces.GymService;
@@ -17,6 +18,7 @@ public class GymController {
         this.gymService = gymService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/gym")
     public ResponseEntity<String> saveOrUpdate(@RequestBody GymDto gymDto) {
         gymService.save(gymDto);

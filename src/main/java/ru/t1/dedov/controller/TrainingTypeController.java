@@ -1,6 +1,7 @@
 package ru.t1.dedov.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.TrainingTypeDto;
 import ru.t1.dedov.service.interfaces.TrainingTypeService;
@@ -17,6 +18,7 @@ public class TrainingTypeController {
         this.trainingTypeService = trainingTypeService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/trainingType")
     public ResponseEntity<String> saveOrUpdate(@RequestBody TrainingTypeDto trainingTypeDto) {
         trainingTypeService.save(trainingTypeDto);
