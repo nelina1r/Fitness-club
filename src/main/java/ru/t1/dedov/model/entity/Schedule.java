@@ -1,5 +1,6 @@
 package ru.t1.dedov.model.entity;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,7 @@ public class Schedule {
     private Long id;
 
     @ManyToOne
+    @NotNull
     private EmployeeTrainingType employeeTrainingType;
 
     @ManyToMany
@@ -38,6 +40,7 @@ public class Schedule {
     private Set<Client> clientList;
 
     @ManyToOne
+    @NotNull
     private Gym gym;
 
     @Column(name = "training_start_date_time", nullable = false)

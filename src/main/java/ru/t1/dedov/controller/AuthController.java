@@ -34,20 +34,20 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody PersonRegistrationDto personRegistrationDto){
+    public ResponseEntity<String> register(@RequestBody PersonRegistrationDto personRegistrationDto) {
         userService.register(personRegistrationDto);
         return ResponseEntity.ok("registered");
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto){
+    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             if (userService.findByUsername(requestDto.getUsername()) == null) {
                 throw new UsernameNotFoundException("User with username: " + requestDto.getUsername() + " not found");
             }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword()));
             return ResponseEntity.ok(Map.of("username", requestDto.getUsername(),
-                    "token", jwtTokenProvider.createToken(requestDto.getUsername())));
+                                            "token", jwtTokenProvider.createToken(requestDto.getUsername())));
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }

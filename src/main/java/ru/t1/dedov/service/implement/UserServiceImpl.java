@@ -8,6 +8,7 @@ import ru.t1.dedov.dto.UserDto;
 import ru.t1.dedov.mapper.ClientMapper;
 import ru.t1.dedov.mapper.EmployeeMapper;
 import ru.t1.dedov.mapper.UserMapper;
+import ru.t1.dedov.model.entity.Employee;
 import ru.t1.dedov.model.entity.User;
 import ru.t1.dedov.model.entity.enums.Role;
 import ru.t1.dedov.model.repository.ClientRepository;
@@ -24,6 +25,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final EmployeeRepository employeeRepository;
+
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
@@ -35,6 +38,20 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(personRegistrationDto.getPassword()));
         user.setRole(Role.USER);
         userRepository.save(user);
+        if(personRegistrationDto.getSalary() != null){
+            Employee employee = new Employee();
+            employee.setId(userRepository.findByUsername(user.getUsername()).get().getId());
+            employee.setFirstName(personRegistrationDto.getFirstName());
+            employee.setLastName(personRegistrationDto.getLastName());
+            employee.setPatronymic(personRegistrationDto.getPatronymic());
+            employee.setPassport(personRegistrationDto.getPassport());
+            employee.setDateOfBirth(personRegistrationDto.getDateOfBirth());
+            employee.setHomeAddress(personRegistrationDto.getHomeAddress());
+            employee.setGender(personRegistrationDto.getGender());
+            employee.setPhoneNumber(personRegistrationDto.getPhoneNumber());
+            employee.setSalary(personRegistrationDto.getSalary());
+            employeeRepository.save(employee);
+        }
     }
 
     @Override
