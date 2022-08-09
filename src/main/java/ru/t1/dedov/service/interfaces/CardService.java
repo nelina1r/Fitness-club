@@ -12,4 +12,6 @@ public interface CardService {
     CardDto save(CardDto cardDto);
 
     void deleteById(Long id);
+
+    void addTrainingTypeInCard(Long cardId, Long ttId);
 }

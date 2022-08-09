@@ -12,8 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class CardDto {
 

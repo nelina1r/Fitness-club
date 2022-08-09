@@ -5,9 +5,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.PersonRegistrationDto;
 import ru.t1.dedov.dto.UserDto;
+import ru.t1.dedov.exceptions.InvalidTypeException;
 import ru.t1.dedov.mapper.ClientMapper;
 import ru.t1.dedov.mapper.EmployeeMapper;
 import ru.t1.dedov.mapper.UserMapper;
+import ru.t1.dedov.model.entity.Client;
 import ru.t1.dedov.model.entity.Employee;
 import ru.t1.dedov.model.entity.User;
 import ru.t1.dedov.model.entity.enums.Role;
@@ -26,21 +28,22 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final EmployeeRepository employeeRepository;
+    private final ClientRepository clientRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Override
     @Transactional
-    public void register(PersonRegistrationDto personRegistrationDto) {
-        User user = new User();
-        user.setUsername(personRegistrationDto.getUsername());
-        user.setPassword(passwordEncoder.encode(personRegistrationDto.getPassword()));
-        user.setRole(Role.USER);
-        userRepository.save(user);
-        if(personRegistrationDto.getSalary() != null){
+    public void register(PersonRegistrationDto personRegistrationDto) throws InvalidTypeException {
+        if(!"employee".equals(personRegistrationDto.getPersonType()) && !"client".equals(personRegistrationDto.getPersonType())){
+            throw new InvalidTypeException("personType must be employee or client");
+        }
+        if(personRegistrationDto.getPersonType().equals("employee")){
             Employee employee = new Employee();
-            employee.setId(userRepository.findByUsername(user.getUsername()).get().getId());
+            employee.setUsername(personRegistrationDto.getUsername());
+            employee.setPassword(passwordEncoder.encode(personRegistrationDto.getPassword()));
+            employee.setRole(Role.USER);
             employee.setFirstName(personRegistrationDto.getFirstName());
             employee.setLastName(personRegistrationDto.getLastName());
             employee.setPatronymic(personRegistrationDto.getPatronymic());
@@ -52,6 +55,28 @@ public class UserServiceImpl implements UserService {
             employee.setSalary(personRegistrationDto.getSalary());
             employeeRepository.save(employee);
         }
+        if(personRegistrationDto.getPersonType().equals("client")){
+            Client client = new Client();
+            client.setUsername(personRegistrationDto.getUsername());
+            client.setPassword(passwordEncoder.encode(personRegistrationDto.getPassword()));
+            client.setRole(Role.GUEST);
+            client.setFirstName(personRegistrationDto.getFirstName());
+            client.setLastName(personRegistrationDto.getLastName());
+            client.setPatronymic(personRegistrationDto.getPatronymic());
+            client.setPassport(personRegistrationDto.getPassport());
+            client.setDateOfBirth(personRegistrationDto.getDateOfBirth());
+            client.setHomeAddress(personRegistrationDto.getHomeAddress());
+            client.setGender(personRegistrationDto.getGender());
+            client.setPhoneNumber(personRegistrationDto.getPhoneNumber());
+            clientRepository.save(client);
+        }
+    }
+
+    @Override
+    public void giveUserAdminRights(Long id){
+        User user = userRepository.getReferenceById(id);
+        user.setRole(Role.ADMIN);
+        userRepository.save(user);
     }
 
     @Override

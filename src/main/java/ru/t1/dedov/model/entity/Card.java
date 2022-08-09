@@ -1,5 +1,6 @@
 package ru.t1.dedov.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +40,11 @@ public class Card {
     private BigDecimal price;
 
     @ManyToOne
-    @NotNull
     private Client client;
 
     @ManyToMany
     @ToString.Exclude
+    @JsonBackReference
     private Set<TrainingType> trainingTypes;
 
     private boolean deleted = Boolean.FALSE;

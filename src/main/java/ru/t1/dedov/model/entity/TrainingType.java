@@ -1,5 +1,6 @@
 package ru.t1.dedov.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -27,9 +28,9 @@ public class TrainingType {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "trainingTypes")
     private Set<Card> cardList;
-
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;

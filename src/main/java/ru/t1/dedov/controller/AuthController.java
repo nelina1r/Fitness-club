@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.t1.dedov.dto.AuthenticationRequestDto;
 import ru.t1.dedov.dto.PersonRegistrationDto;
+import ru.t1.dedov.exceptions.InvalidTypeException;
 import ru.t1.dedov.security.jwt.JwtTokenProvider;
 import ru.t1.dedov.service.interfaces.UserService;
 
@@ -34,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody PersonRegistrationDto personRegistrationDto) {
+    public ResponseEntity<String> register(@RequestBody PersonRegistrationDto personRegistrationDto) throws InvalidTypeException {
         userService.register(personRegistrationDto);
         return ResponseEntity.ok("registered");
     }

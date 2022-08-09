@@ -18,7 +18,7 @@ public class TrainingTypeController {
         this.trainingTypeService = trainingTypeService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('R')")
     @PostMapping("/trainingType")
     public ResponseEntity<String> saveOrUpdate(@RequestBody TrainingTypeDto trainingTypeDto) {
         trainingTypeService.save(trainingTypeDto);

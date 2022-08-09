@@ -4,17 +4,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.CardDto;
 import ru.t1.dedov.mapper.CardMapper;
+import ru.t1.dedov.model.entity.Card;
+import ru.t1.dedov.model.entity.TrainingType;
 import ru.t1.dedov.model.repository.CardRepository;
+import ru.t1.dedov.model.repository.TrainingTypeRepository;
 import ru.t1.dedov.service.interfaces.CardService;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
+    private final TrainingTypeRepository trainingTypeRepository;
     private final CardMapper cardMapper;
 
     @Override
@@ -41,4 +46,15 @@ public class CardServiceImpl implements CardService {
     public void deleteById(Long id) {
         cardRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void addTrainingTypeInCard(Long cardId, Long ttId) {
+        Card card = cardRepository.getReferenceById(cardId);
+        TrainingType trainingType = trainingTypeRepository.getReferenceById(ttId);
+        Set<TrainingType> ttSet = card.getTrainingTypes();
+        ttSet.add(trainingType);
+        card.setTrainingTypes(ttSet);
+        cardRepository.save(card);
+    } // падает нуллпоинтер
 }

@@ -7,6 +7,7 @@ import ru.t1.dedov.dto.CardDto;
 import ru.t1.dedov.service.interfaces.CardService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -17,7 +18,7 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/card")
     public ResponseEntity<String> saveOrUpdate(@RequestBody CardDto cardDto) {
         cardService.save(cardDto);
@@ -38,5 +39,12 @@ public class CardController {
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         cardService.deleteById(id);
         return ResponseEntity.ok("deleted");
+    }
+
+    @RequestMapping(value = "/cardId/{cardId}/TTid/{TTId}", method = RequestMethod.POST)
+    public ResponseEntity<String> addTrainingTypeInCard(@PathVariable(value = "cardId") Long cardId,
+                                                        @PathVariable(value = "TTId") Long TTId){
+        cardService.addTrainingTypeInCard(cardId, TTId);
+        return ResponseEntity.ok("now card with id = " + cardId + " have a TT with id " + TTId);
     }
 }
