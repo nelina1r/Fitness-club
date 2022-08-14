@@ -3,6 +3,7 @@ package ru.t1.dedov.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.ScheduleDto;
+import ru.t1.dedov.exceptions.InvalidDataException;
 import ru.t1.dedov.service.interfaces.ScheduleService;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/schedule")
-    public ResponseEntity<String> saveOrUpdate(@RequestBody ScheduleDto scheduleDto) {
+    public ResponseEntity<String> saveOrUpdate(@RequestBody ScheduleDto scheduleDto) throws InvalidDataException {
         scheduleService.save(scheduleDto);
         return ResponseEntity.ok("ok");
     }

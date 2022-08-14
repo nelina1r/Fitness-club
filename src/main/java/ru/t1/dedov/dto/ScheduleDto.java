@@ -3,13 +3,11 @@ package ru.t1.dedov.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.t1.dedov.model.entity.Client;
-import ru.t1.dedov.model.entity.Employee;
-import ru.t1.dedov.model.entity.Gym;
-import ru.t1.dedov.model.entity.TrainingType;
+import ru.t1.dedov.model.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -18,11 +16,9 @@ public class ScheduleDto {
     @JsonIgnore
     private Long id;
 
-    private Employee employee;
+    private EmployeeTrainingType employeeTrainingType;
 
     private Gym gym;
-
-    private TrainingType trainingType;
 
     private LocalDateTime trainingStartDateTime;
 
@@ -30,5 +26,5 @@ public class ScheduleDto {
 
     private Integer peopleCapacity;
 
-    private List<Client> clientList;
+    private Set<Client> clientSet;
 }

@@ -1,5 +1,6 @@
 package ru.t1.dedov.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -51,10 +52,12 @@ public class Client extends User implements Serializable {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "client")
+    @JsonBackReference
     @ToString.Exclude
-    private Set<Card> cardList;
+    private Set<Card> cardSet;
 
-    @ManyToMany(mappedBy = "clientList")
+    @ManyToMany(mappedBy = "clientSet")
+    @JsonBackReference
     @ToString.Exclude
     private Set<Schedule> scheduleList;
 

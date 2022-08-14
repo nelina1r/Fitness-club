@@ -56,5 +56,5 @@ public class CardServiceImpl implements CardService {
         ttSet.add(trainingType);
         card.setTrainingTypes(ttSet);
         cardRepository.save(card);
-    } // падает нуллпоинтер
+    }
 }

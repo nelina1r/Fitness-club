@@ -1,9 +1,11 @@
 package ru.t1.dedov.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.CardDto;
+import ru.t1.dedov.model.entity.enums.Role;
 import ru.t1.dedov.service.interfaces.CardService;
 
 import java.util.List;
@@ -18,7 +20,6 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/card")
     public ResponseEntity<String> saveOrUpdate(@RequestBody CardDto cardDto) {
         cardService.save(cardDto);
@@ -41,9 +42,10 @@ public class CardController {
         return ResponseEntity.ok("deleted");
     }
 
-    @RequestMapping(value = "/cardId/{cardId}/TTid/{TTId}", method = RequestMethod.POST)
+    //@Secured("ADMIN")
+    @PostMapping("/cardId/{cardId}/TTid/{TTId}")
     public ResponseEntity<String> addTrainingTypeInCard(@PathVariable(value = "cardId") Long cardId,
-                                                        @PathVariable(value = "TTId") Long TTId){
+                                                        @PathVariable(value = "TTId") Long TTId) {
         cardService.addTrainingTypeInCard(cardId, TTId);
         return ResponseEntity.ok("now card with id = " + cardId + " have a TT with id " + TTId);
     }

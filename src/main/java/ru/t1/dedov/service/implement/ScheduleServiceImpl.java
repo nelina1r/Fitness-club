@@ -3,10 +3,13 @@ package ru.t1.dedov.service.implement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.ScheduleDto;
+import ru.t1.dedov.exceptions.InvalidDataException;
+import ru.t1.dedov.exceptions.InvalidTypeException;
 import ru.t1.dedov.mapper.ScheduleMapper;
 import ru.t1.dedov.model.repository.ScheduleRepository;
 import ru.t1.dedov.service.interfaces.ScheduleService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +33,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleDto save(ScheduleDto scheduleDto) {
+    public ScheduleDto save(ScheduleDto scheduleDto) throws InvalidDataException {
+        if(scheduleDto.getTrainingStartDateTime().isBefore(LocalDateTime.now())){
+            throw new InvalidDataException("DateTime mustn't be earlier than now");
+        }
         scheduleRepository.save(scheduleMapper.toEntity(scheduleDto));
         return scheduleDto;
     }

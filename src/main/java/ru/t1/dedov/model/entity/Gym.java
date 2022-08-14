@@ -1,5 +1,6 @@
 package ru.t1.dedov.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class Gym {
     private Long id;
 
     @OneToMany(mappedBy = "gym")
+    @JsonBackReference
     private Set<Schedule> scheduleList;
 
     @Column(name = "name", unique = true, nullable = false)

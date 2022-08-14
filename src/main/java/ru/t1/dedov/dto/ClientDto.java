@@ -2,17 +2,15 @@ package ru.t1.dedov.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import ru.t1.dedov.model.entity.Card;
 import ru.t1.dedov.model.entity.Schedule;
 import ru.t1.dedov.model.entity.enums.Gender;
-import ru.t1.dedov.model.entity.enums.Role;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -38,7 +36,7 @@ public class ClientDto {
 
     private String phoneNumber;
 
-    private List<Card> cardList;
+    private Set<Card> cardSet;
 
     private List<Schedule> scheduleList;
 }

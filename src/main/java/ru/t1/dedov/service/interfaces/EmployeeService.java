@@ -12,5 +12,4 @@ public interface EmployeeService {
     EmployeeDto save(EmployeeDto employeeDto);
 
     void deleteById(Long id);
-
 }

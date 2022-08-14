@@ -1,5 +1,6 @@
 package ru.t1.dedov.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,9 @@ public class Schedule {
     private EmployeeTrainingType employeeTrainingType;
 
     @ManyToMany
+    @JsonBackReference
     @ToString.Exclude
-    private Set<Client> clientList;
+    private Set<Client> clientSet;
 
     @ManyToOne
     @NotNull
