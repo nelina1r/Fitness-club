@@ -1,5 +1,7 @@
 package ru.t1.dedov.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +10,7 @@ import ru.t1.dedov.service.interfaces.TrainingTypeService;
 
 import java.util.List;
 
+@Api(value = "Training type controller")
 @RestController
 @RequestMapping("/api")
 public class TrainingTypeController {
@@ -18,23 +21,26 @@ public class TrainingTypeController {
         this.trainingTypeService = trainingTypeService;
     }
 
-    //@PreAuthorize("hasRole('R')")
+    @ApiOperation("save training type")
     @PostMapping("/trainingType")
     public ResponseEntity<String> saveOrUpdate(@RequestBody TrainingTypeDto trainingTypeDto) {
         trainingTypeService.save(trainingTypeDto);
         return ResponseEntity.ok("ok");
     }
 
+    @ApiOperation("find add training types")
     @GetMapping("/trainingType")
     public List<TrainingTypeDto> findAll() {
         return trainingTypeService.findAll();
     }
 
+    @ApiOperation("find training type by id")
     @GetMapping("/trainingType/{id}")
     public ResponseEntity<TrainingTypeDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(trainingTypeService.findById(id));
     }
 
+    @ApiOperation("delete training type by id")
     @DeleteMapping("/trainingType/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         trainingTypeService.deleteById(id);

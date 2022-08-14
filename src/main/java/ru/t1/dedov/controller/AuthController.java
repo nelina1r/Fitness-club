@@ -1,5 +1,7 @@
 package ru.t1.dedov.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ import ru.t1.dedov.service.interfaces.UserService;
 
 import java.util.Map;
 
+@Api(value = "Auth controller")
 @RestController
 @RequestMapping("/api")
 public class AuthController {
@@ -34,12 +37,14 @@ public class AuthController {
         this.userService = userService;
     }
 
+    @ApiOperation("register new employee/client")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody PersonRegistrationDto personRegistrationDto) throws InvalidTypeException {
         userService.register(personRegistrationDto);
         return ResponseEntity.ok("registered");
     }
 
+    @ApiOperation("login")
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
