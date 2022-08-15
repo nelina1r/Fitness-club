@@ -13,9 +13,12 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  data:
+    mongodb:
+      database: fitness_club_audit_db
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher
+      matching-strategy: ANT_PATH_MATCHER
 
 jwt-token:
   secret-key: jwtFSEvgSvfsevGe43ybt7gupbhxfFDgvsbjnidt21rt7kkfhjreryhx
