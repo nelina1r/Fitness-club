@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.GymDto;
 import ru.t1.dedov.mapper.GymMapper;
+import ru.t1.dedov.model.entity.Gym;
 import ru.t1.dedov.model.repository.GymRepository;
 import ru.t1.dedov.service.interfaces.GymService;
 
@@ -38,5 +39,13 @@ public class GymServiceImpl implements GymService {
     @Override
     public void deleteById(Long id) {
         gymRepository.deleteById(id);
+    }
+
+    @Override
+    public void editById(Long id, GymDto gymDto) {
+        Gym gym = gymRepository.getReferenceById(id);
+        gym.setName(gymDto.getName());
+        gym.setPeopleCapacity(gymDto.getPeopleCapacity());
+        gymRepository.save(gym);
     }
 }

@@ -1,6 +1,7 @@
 package ru.t1.dedov.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +38,12 @@ public class Schedule {
     private EmployeeTrainingType employeeTrainingType;
 
     @ManyToMany
-    @JsonBackReference
     @ToString.Exclude
     private Set<Client> clientSet;
 
     @ManyToOne
     @NotNull
+    @JsonBackReference
     private Gym gym;
 
     @Column(name = "training_start_date_time", nullable = false)
@@ -63,7 +64,6 @@ public class Schedule {
         Schedule schedule = (Schedule) o;
         return id != null && Objects.equals(id, schedule.id);
     }
-
 
     @Override
     public int hashCode() {

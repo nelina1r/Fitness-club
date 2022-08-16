@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.data.mongodb.core.mapping.Field;
 import ru.t1.dedov.model.entity.enums.Role;
 
 import javax.persistence.*;
@@ -37,6 +38,7 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @Field(value = "user_deleted")
     private boolean deleted = Boolean.FALSE;
 
     @Override

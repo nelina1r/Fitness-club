@@ -25,26 +25,33 @@ public class CardController {
 
     @ApiOperation("save card")
     @PostMapping("/card")
-    public ResponseEntity<String> saveOrUpdate(@RequestBody CardDto cardDto) {
+    public ResponseEntity<String> saveCard(@RequestBody CardDto cardDto) {
         cardService.save(cardDto);
         return ResponseEntity.ok("ok");
     }
 
+    @ApiOperation("edit card")
+    @PutMapping("/card/{id}")
+    public ResponseEntity<String> editCard(@PathVariable Long id, @RequestBody CardDto cardDto){
+        cardService.editById(id, cardDto);
+        return ResponseEntity.ok("updated");
+    }
+
     @ApiOperation("find all cards")
     @GetMapping("/card")
-    public List<CardDto> findAll() {
+    public List<CardDto> findAllCards() {
         return cardService.findAll();
     }
 
     @ApiOperation("fin card by id")
     @GetMapping("/card/{id}")
-    public ResponseEntity<CardDto> findById(@PathVariable Long id) {
+    public ResponseEntity<CardDto> findCardById(@PathVariable Long id) {
         return ResponseEntity.ok(cardService.findById(id));
     }
 
     @ApiOperation("delete card by id")
     @DeleteMapping("/card/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCardById(@PathVariable Long id) {
         cardService.deleteById(id);
         return ResponseEntity.ok("deleted");
     }

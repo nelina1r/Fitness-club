@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 public class EmployeeTrainingTypeId implements Serializable {
 
-    private Employee employee;
+    private Long employee;
 
-    private TrainingType trainingType;
+    private Long trainingType;
 }

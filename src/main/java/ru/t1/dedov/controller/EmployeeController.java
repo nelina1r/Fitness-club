@@ -22,26 +22,33 @@ public class EmployeeController {
 
     @ApiOperation("save employee")
     @PostMapping("/employee")
-    public ResponseEntity<String> saveOrUpdate(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<String> saveEmployee(@RequestBody EmployeeDto employeeDto) {
         employeeService.save(employeeDto);
         return ResponseEntity.ok("ok");
     }
 
+    @ApiOperation("edit employee")
+    @PutMapping("/employee/{id}")
+    public ResponseEntity<String> editEmployee(@PathVariable Long id, @RequestBody EmployeeDto employeeDto) {
+        employeeService.editById(id, employeeDto);
+        return ResponseEntity.ok("updated");
+    }
+
     @ApiOperation("find all employees")
     @GetMapping("/employee")
-    public List<EmployeeDto> findAll() {
+    public List<EmployeeDto> findAllEmployees() {
         return employeeService.findAll();
     }
 
     @ApiOperation("find employee by id")
     @GetMapping("/employee/{id}")
-    public ResponseEntity<EmployeeDto> findById(@PathVariable Long id) {
+    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.findById(id));
     }
 
     @ApiOperation("delete employee by id")
     @DeleteMapping("/employee/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteEmployeeById(@PathVariable Long id) {
         employeeService.deleteById(id);
         return ResponseEntity.ok("deleted");
     }

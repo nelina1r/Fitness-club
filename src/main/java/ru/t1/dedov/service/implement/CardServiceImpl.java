@@ -57,4 +57,13 @@ public class CardServiceImpl implements CardService {
         card.setTrainingTypes(ttSet);
         cardRepository.save(card);
     }
+
+    @Override
+    public void editById(Long cardId, CardDto cardDto) {
+        Card card = cardRepository.getReferenceById(cardId);
+        card.setDateOfPurchase(cardDto.getDateOfPurchase());
+        card.setDateOfExpiration(cardDto.getDateOfExpiration());
+        card.setPrice(cardDto.getPrice());
+        cardRepository.save(card);
+    }
 }

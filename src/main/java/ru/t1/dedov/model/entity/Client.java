@@ -1,6 +1,8 @@
 package ru.t1.dedov.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -21,8 +23,6 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 @Table(name = "client")
 public class Client extends User implements Serializable {
 
@@ -52,16 +52,14 @@ public class Client extends User implements Serializable {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "client")
-    @JsonBackReference
     @ToString.Exclude
+    @JsonBackReference(value = "cards")
     private Set<Card> cardSet;
 
     @ManyToMany(mappedBy = "clientSet")
-    @JsonBackReference
     @ToString.Exclude
+    @JsonBackReference(value = "schedules")
     private Set<Schedule> scheduleList;
-
-    private boolean deleted = Boolean.FALSE;
 
     @Override
     public boolean equals(Object o) {

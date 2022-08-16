@@ -29,7 +29,7 @@ public class UserController {
 
     @ApiOperation("find all users")
     @GetMapping("/user/list")
-    public List<UserDto> findAll(){
+    public List<UserDto> findAllUsers(){
         return userService.getAllUsers();
     }
 }

@@ -46,7 +46,7 @@ public class AuthController {
 
     @ApiOperation("login")
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             if (userService.findByUsername(requestDto.getUsername()) == null) {
                 throw new UsernameNotFoundException("User with username: " + requestDto.getUsername() + " not found");

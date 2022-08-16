@@ -6,25 +6,24 @@ import lombok.NoArgsConstructor;
 import ru.t1.dedov.model.entity.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class ScheduleDto {
+public class ScheduleCreationDto {
 
     @JsonIgnore
     private Long id;
 
-    private EmployeeTrainingType employeeTrainingType;
+    private Long employeeId;
 
-    private Gym gym;
+    private Long trainingTypeId;
+
+    private Long gymId;
 
     private LocalDateTime trainingStartDateTime;
 
     private Integer trainingDuration;
 
     private Integer peopleCapacity;
-
-    private Set<Client> clientSet;
 }

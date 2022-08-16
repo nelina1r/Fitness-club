@@ -12,4 +12,6 @@ public interface GymService {
     GymDto save(GymDto gymDto);
 
     void deleteById(Long id);
+
+    void editById(Long id, GymDto gymDto);
 }

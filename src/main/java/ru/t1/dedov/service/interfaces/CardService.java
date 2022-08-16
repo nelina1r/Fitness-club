@@ -14,4 +14,6 @@ public interface CardService {
     void deleteById(Long id);
 
     void addTrainingTypeInCard(Long cardId, Long ttId);
+
+    void editById(Long cardId, CardDto cardDto);
 }

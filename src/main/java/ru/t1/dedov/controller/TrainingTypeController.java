@@ -23,26 +23,26 @@ public class TrainingTypeController {
 
     @ApiOperation("save training type")
     @PostMapping("/trainingType")
-    public ResponseEntity<String> saveOrUpdate(@RequestBody TrainingTypeDto trainingTypeDto) {
+    public ResponseEntity<String> saveTrainingType(@RequestBody TrainingTypeDto trainingTypeDto) {
         trainingTypeService.save(trainingTypeDto);
         return ResponseEntity.ok("ok");
     }
 
     @ApiOperation("find add training types")
     @GetMapping("/trainingType")
-    public List<TrainingTypeDto> findAll() {
+    public List<TrainingTypeDto> findAllTrainingTypes() {
         return trainingTypeService.findAll();
     }
 
     @ApiOperation("find training type by id")
     @GetMapping("/trainingType/{id}")
-    public ResponseEntity<TrainingTypeDto> findById(@PathVariable Long id) {
+    public ResponseEntity<TrainingTypeDto> findTrainingTypeById(@PathVariable Long id) {
         return ResponseEntity.ok(trainingTypeService.findById(id));
     }
 
     @ApiOperation("delete training type by id")
     @DeleteMapping("/trainingType/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteTrainingTypeById(@PathVariable Long id) {
         trainingTypeService.deleteById(id);
         return ResponseEntity.ok("deleted");
     }

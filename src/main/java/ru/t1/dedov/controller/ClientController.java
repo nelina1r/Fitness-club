@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.ClientDto;
+import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidTypeException;
 import ru.t1.dedov.service.interfaces.ClientService;
 
@@ -22,9 +23,16 @@ public class ClientController {
 
     @ApiOperation("save client")
     @PostMapping("/client")
-    public ResponseEntity<String> saveOrUpdate(@RequestBody ClientDto clientDto) {
+    public ResponseEntity<String> saveClient(@RequestBody ClientDto clientDto) {
         clientService.save(clientDto);
         return ResponseEntity.ok("ok");
+    }
+
+    @ApiOperation("edit client")
+    @PutMapping("/client/{id}")
+    public ResponseEntity<String> editClient(@PathVariable Long id, @RequestBody ClientDto clientDto) {
+        clientService.editById(id, clientDto);
+        return ResponseEntity.ok("updated");
     }
 
     @ApiOperation("add card by id to client by id")
@@ -38,26 +46,26 @@ public class ClientController {
     @ApiOperation("sign client by id to schedule by id")
     @PostMapping("/clientId/{clientId}/scheduleId/{scheduleId}")
     public ResponseEntity<String> signClientOnSchedule(@PathVariable(value = "clientId") Long clientId,
-                                                       @PathVariable(value = "scheduleId") Long scheduleId) throws InvalidTypeException {
+                                                       @PathVariable(value = "scheduleId") Long scheduleId) throws InvalidTypeException, InvalidCapacityException {
         clientService.signClientOnSchedule(clientId, scheduleId);
         return ResponseEntity.ok("now client with id = " + clientId + " signed on schedule with id = " + scheduleId);
     }
 
     @ApiOperation("find all clients")
     @GetMapping("/client")
-    public List<ClientDto> findAll() {
+    public List<ClientDto> findAllClients() {
         return clientService.findAll();
     }
 
     @ApiOperation("find client by id")
     @GetMapping("/client/{id}")
-    public ResponseEntity<ClientDto> findById(@PathVariable Long id) {
+    public ResponseEntity<ClientDto> findClientById(@PathVariable Long id) {
         return ResponseEntity.ok(clientService.findById(id));
     }
 
     @ApiOperation("delete client by id")
     @DeleteMapping("/client/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteClientById(@PathVariable Long id) {
         clientService.deleteById(id);
         return ResponseEntity.ok("deleted");
     }

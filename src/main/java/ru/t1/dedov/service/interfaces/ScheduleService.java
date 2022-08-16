@@ -1,16 +1,20 @@
 package ru.t1.dedov.service.interfaces;
 
-import ru.t1.dedov.dto.ScheduleDto;
+import ru.t1.dedov.dto.ScheduleCreationDto;
+import ru.t1.dedov.dto.ScheduleOutputDto;
+import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidDataException;
+import ru.t1.dedov.exceptions.InvalidRoleException;
 
 import java.util.List;
 
 public interface ScheduleService {
-    List<ScheduleDto> findAll();
+    List<ScheduleOutputDto> findAll();
 
-    ScheduleDto findById(Long id);
+    ScheduleOutputDto findById(Long id);
 
-    ScheduleDto save(ScheduleDto scheduleDto) throws InvalidDataException;
+    ScheduleOutputDto save(ScheduleCreationDto scheduleDto) throws InvalidDataException, InvalidRoleException, InvalidCapacityException;
 
+    void editById(Long id, ScheduleCreationDto scheduleDto);
     void deleteById(Long id);
 }

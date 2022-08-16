@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
             Employee employee = new Employee();
             employee.setUsername(personRegistrationDto.getUsername());
             employee.setPassword(passwordEncoder.encode(personRegistrationDto.getPassword()));
-            employee.setRole(Role.USER);
+            employee.setRole(Role.TRAINER);
             employee.setFirstName(personRegistrationDto.getFirstName());
             employee.setLastName(personRegistrationDto.getLastName());
             employee.setPatronymic(personRegistrationDto.getPatronymic());
