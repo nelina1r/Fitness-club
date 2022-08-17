@@ -50,8 +50,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         //
         Employee employee = employeeRepository.getReferenceById(scheduleCreationDto.getEmployeeId());
         TrainingType trainingType = trainingTypeRepository.getReferenceById(scheduleCreationDto.getTrainingTypeId());
+        //
         EmployeeTrainingType employeeTrainingType = new EmployeeTrainingType();
-
         employeeTrainingType.setEmployee(employee);
         employeeTrainingType.setTrainingType(trainingType);
         employeeTTRepository.save(employeeTrainingType);
@@ -78,13 +78,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void editById(Long id, ScheduleCreationDto scheduleDto) {
-        Schedule schedule = scheduleRepository.getReferenceById(id);
+        /*Schedule schedule = scheduleRepository.getReferenceById(id);
         schedule.setTrainingStartDateTime(scheduleDto.getTrainingStartDateTime());
         schedule.setTrainingDuration(schedule.getTrainingDuration());
         //schedule.setGym(scheduleDto.getGym());
         schedule.setPeopleCapacity(scheduleDto.getPeopleCapacity());
         schedule.setEmployeeTrainingType(schedule.getEmployeeTrainingType());
-        scheduleRepository.save(schedule);
+        scheduleRepository.save(schedule);*/
     }
 
     @Override

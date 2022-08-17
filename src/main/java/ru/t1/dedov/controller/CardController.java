@@ -56,7 +56,7 @@ public class CardController {
         return ResponseEntity.ok("deleted");
     }
 
-    //@Secured("ADMIN")
+    //@Secured("GUEST")
     @ApiOperation("add training type by id to card by id")
     @PostMapping("/cardId/{cardId}/TTid/{TTId}")
     public ResponseEntity<String> addTrainingTypeInCard(@PathVariable(value = "cardId") Long cardId,
