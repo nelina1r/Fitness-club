@@ -1,19 +1,21 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.ScheduleCreationDto;
 import ru.t1.dedov.dto.ScheduleOutputDto;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
-import ru.t1.dedov.exceptions.InvalidDataException;
+import ru.t1.dedov.exceptions.InvalidDateTimeException;
 import ru.t1.dedov.exceptions.InvalidRoleException;
 import ru.t1.dedov.mapper.ScheduleMapper;
 import ru.t1.dedov.model.entity.*;
-import ru.t1.dedov.model.entity.enums.Role;
 import ru.t1.dedov.model.repository.*;
 import ru.t1.dedov.service.interfaces.ScheduleService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,46 +47,88 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleOutputDto save(ScheduleCreationDto scheduleCreationDto) throws InvalidDataException, InvalidRoleException, InvalidCapacityException {
+    @Transactional
+    public ScheduleOutputDto save(ScheduleCreationDto scheduleCreationDto) throws InvalidDateTimeException, InvalidRoleException, InvalidCapacityException {
         Schedule schedule = new Schedule();
         //
-        Employee employee = employeeRepository.getReferenceById(scheduleCreationDto.getEmployeeId());
-        TrainingType trainingType = trainingTypeRepository.getReferenceById(scheduleCreationDto.getTrainingTypeId());
-        //
         EmployeeTrainingType employeeTrainingType = new EmployeeTrainingType();
+        Employee employee = employeeRepository.getReferenceById(scheduleCreationDto.getEmployeeId());
         employeeTrainingType.setEmployee(employee);
-        employeeTrainingType.setTrainingType(trainingType);
-        employeeTTRepository.save(employeeTrainingType);
+        employeeTrainingType.setTrainingType(trainingTypeRepository.getReferenceById(scheduleCreationDto.getTrainingTypeId()));
+        if (!employeeTTRepository.exists(Example.of(employeeTrainingType))) {
+            employeeTTRepository.save(employeeTrainingType);
+        }
         //
-        schedule.setEmployeeTrainingType(employeeTrainingType);
         Gym gym = gymRepository.getReferenceById(scheduleCreationDto.getGymId());
+        //
+        if(crossingDateTimeInScheduleCheck(gym, employee, scheduleCreationDto)){
+            throw new InvalidDateTimeException("dateTime that you picked crosses with other schedule's dateTime");
+        }
+        if (scheduleCreationDto.getTrainingStartDateTime().isBefore(LocalDateTime.now())) {
+            throw new InvalidDateTimeException("trainingStartDateTime must be sooner than now");
+        }
+        if (gym.getPeopleCapacity().compareTo(scheduleCreationDto.getPeopleCapacity()) < 0) {
+            throw new InvalidCapacityException("capacity of gym must be >= than capacity of training");
+        }
+        //
         schedule.setGym(gym);
+        schedule.setEmployeeTrainingType(employeeTrainingType);
         schedule.setTrainingStartDateTime(scheduleCreationDto.getTrainingStartDateTime());
         schedule.setTrainingDuration(scheduleCreationDto.getTrainingDuration());
         schedule.setPeopleCapacity(scheduleCreationDto.getPeopleCapacity());
-        if (schedule.getTrainingStartDateTime().isBefore(LocalDateTime.now())) {
-            throw new InvalidDataException("trainingStartDateTime must be sooner than now");
-        }
-        if (!schedule.getEmployeeTrainingType().getEmployee().getRole().equals(Role.TRAINER)) {
-            throw new InvalidRoleException("employee must be trainer to create a schedule");
-        }
-        if (gym.getPeopleCapacity().compareTo(scheduleCreationDto.getPeopleCapacity()) < 0 ||
-                !gym.getPeopleCapacity().equals(scheduleCreationDto.getPeopleCapacity())){
-            throw new InvalidCapacityException("capacity of gym must be >= than capacity of training");
-        }
-            scheduleRepository.save(schedule);
+        scheduleRepository.save(schedule);
         return scheduleMapper.toDto(schedule);
     }
 
+    boolean crossingDateTimeInScheduleCheck(Gym currentGym, Employee currentEmployee, ScheduleCreationDto scheduleDto) {
+        return scheduleRepository.findAll().stream()
+                .filter(x -> (x.getGym().equals(currentGym) || (x.getEmployeeTrainingType().getEmployee().equals(currentEmployee))))
+                .anyMatch(x ->
+                        ((scheduleDto.getTrainingStartDateTime().plusMinutes(scheduleDto.getTrainingDuration())
+                                .isAfter(x.getTrainingStartDateTime()))
+                                &&
+                        (scheduleDto.getTrainingStartDateTime().plusMinutes(scheduleDto.getTrainingDuration())
+                                .isBefore(x.getTrainingStartDateTime().plusMinutes(x.getTrainingDuration()))))
+                ||
+                        ((scheduleDto.getTrainingStartDateTime()
+                                .isBefore(x.getTrainingStartDateTime().plusMinutes(x.getTrainingDuration())))
+                                &&
+                        (scheduleDto.getTrainingStartDateTime())
+                                .isAfter(x.getTrainingStartDateTime()))
+                ||
+                        ((scheduleDto.getTrainingStartDateTime()
+                                .isBefore(x.getTrainingStartDateTime())
+                                &&
+                        (scheduleDto.getTrainingStartDateTime().plusMinutes(scheduleDto.getTrainingDuration())
+                                .isAfter(x.getTrainingStartDateTime().plusMinutes(x.getTrainingDuration()))))));
+    }
+
     @Override
-    public void editById(Long id, ScheduleCreationDto scheduleDto) {
-        /*Schedule schedule = scheduleRepository.getReferenceById(id);
-        schedule.setTrainingStartDateTime(scheduleDto.getTrainingStartDateTime());
-        schedule.setTrainingDuration(schedule.getTrainingDuration());
-        //schedule.setGym(scheduleDto.getGym());
-        schedule.setPeopleCapacity(scheduleDto.getPeopleCapacity());
-        schedule.setEmployeeTrainingType(schedule.getEmployeeTrainingType());
-        scheduleRepository.save(schedule);*/
+    public void editById(Long id, ScheduleCreationDto scheduleCreationDto) throws InvalidDateTimeException, InvalidCapacityException {
+        Schedule schedule = scheduleRepository.getReferenceById(id);
+        EmployeeTrainingType employeeTrainingType = new EmployeeTrainingType();
+        Employee employee = employeeRepository.getReferenceById(scheduleCreationDto.getEmployeeId());
+        employeeTrainingType.setEmployee(employee);
+        employeeTrainingType.setTrainingType(trainingTypeRepository.getReferenceById(scheduleCreationDto.getTrainingTypeId()));
+        if (!employeeTTRepository.exists(Example.of(employeeTrainingType))) {
+            employeeTTRepository.save(employeeTrainingType);
+        }
+        Gym gym = gymRepository.getReferenceById(scheduleCreationDto.getGymId());
+        if(crossingDateTimeInScheduleCheck(gym, employee, scheduleCreationDto)){
+            throw new InvalidDateTimeException("dateTime that you picked crosses with other schedule's dateTime");
+        }
+        if (scheduleCreationDto.getTrainingStartDateTime().isBefore(LocalDateTime.now())) {
+            throw new InvalidDateTimeException("trainingStartDateTime must be sooner than now");
+        }
+        if (gym.getPeopleCapacity().compareTo(scheduleCreationDto.getPeopleCapacity()) < 0) {
+            throw new InvalidCapacityException("capacity of gym must be >= than capacity of training");
+        }
+        schedule.setGym(gym);
+        schedule.setEmployeeTrainingType(employeeTrainingType);
+        schedule.setTrainingStartDateTime(scheduleCreationDto.getTrainingStartDateTime());
+        schedule.setTrainingDuration(scheduleCreationDto.getTrainingDuration());
+        schedule.setPeopleCapacity(scheduleCreationDto.getPeopleCapacity());
+        scheduleRepository.save(schedule);
     }
 
     @Override

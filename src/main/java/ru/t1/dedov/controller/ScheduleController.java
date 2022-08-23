@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.ScheduleCreationDto;
 import ru.t1.dedov.dto.ScheduleOutputDto;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
-import ru.t1.dedov.exceptions.InvalidDataException;
+import ru.t1.dedov.exceptions.InvalidDateTimeException;
 import ru.t1.dedov.exceptions.InvalidRoleException;
 import ru.t1.dedov.service.interfaces.ScheduleService;
 
@@ -25,14 +25,14 @@ public class ScheduleController {
 
     @ApiOperation("save schedule")
     @PostMapping("/schedule")
-    public ResponseEntity<String> saveSchedule(@RequestBody ScheduleCreationDto scheduleDto) throws InvalidDataException, InvalidRoleException, InvalidCapacityException {
+    public ResponseEntity<String> saveSchedule(@RequestBody ScheduleCreationDto scheduleDto) throws InvalidDateTimeException, InvalidRoleException, InvalidCapacityException {
         scheduleService.save(scheduleDto);
         return ResponseEntity.ok("ok");
     }
 
     @ApiOperation("edit schedule")
     @PutMapping("/schedule/{id}")
-    public ResponseEntity<String> editSchedule(@PathVariable Long id, @RequestBody ScheduleCreationDto scheduleDto) {
+    public ResponseEntity<String> editSchedule(@PathVariable Long id, @RequestBody ScheduleCreationDto scheduleDto) throws InvalidDateTimeException, InvalidCapacityException {
         scheduleService.editById(id, scheduleDto);
         return ResponseEntity.ok("updated");
     }

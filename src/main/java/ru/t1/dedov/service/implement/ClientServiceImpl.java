@@ -78,6 +78,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public void signClientOnSchedule(Long clientId, Long scheduleId) throws InvalidTypeException, InvalidCapacityException {
         Client client = clientRepository.getReferenceById(clientId);
         Schedule schedule = scheduleRepository.getReferenceById(scheduleId);
@@ -87,7 +88,7 @@ public class ClientServiceImpl implements ClientService {
             throw new InvalidTypeException("no approachable training type in your card for this training");
         }
         Set<Client> clientSet = schedule.getClientSet();
-        if (schedule.getPeopleCapacity().equals(clientSet.size())){
+        if (schedule.getPeopleCapacity().compareTo(clientSet.size()) <= 0){ //!
             throw new InvalidCapacityException("this training is full of clients");
         }
         clientSet.add(client);
