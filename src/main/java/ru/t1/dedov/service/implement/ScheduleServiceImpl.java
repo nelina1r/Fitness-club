@@ -9,13 +9,15 @@ import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidDateTimeException;
 import ru.t1.dedov.exceptions.InvalidRoleException;
 import ru.t1.dedov.mapper.ScheduleMapper;
-import ru.t1.dedov.model.entity.*;
+import ru.t1.dedov.model.entity.Employee;
+import ru.t1.dedov.model.entity.EmployeeTrainingType;
+import ru.t1.dedov.model.entity.Gym;
+import ru.t1.dedov.model.entity.Schedule;
 import ru.t1.dedov.model.repository.*;
 import ru.t1.dedov.service.interfaces.ScheduleService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,8 +83,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     boolean crossingDateTimeInScheduleCheck(Gym currentGym, Employee currentEmployee, ScheduleCreationDto scheduleDto) {
-        return scheduleRepository.findAll().stream()
-                .filter(x -> (x.getGym().equals(currentGym) || (x.getEmployeeTrainingType().getEmployee().equals(currentEmployee))))
+        return scheduleRepository.findAllByGymOrEmployeeTrainingType_Employee(currentGym, currentEmployee)
+                .stream()
                 .anyMatch(x ->
                         ((scheduleDto.getTrainingStartDateTime().plusMinutes(scheduleDto.getTrainingDuration())
                                 .isAfter(x.getTrainingStartDateTime()))

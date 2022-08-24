@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.ClientDto;
+import ru.t1.dedov.exceptions.CardAlreadyAttachedException;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidTypeException;
 import ru.t1.dedov.service.interfaces.ClientService;
@@ -38,7 +39,7 @@ public class ClientController {
     @ApiOperation("add card by id to client by id")
     @PostMapping("/clientId/{clientId}/cardId/{cardId}")
     public ResponseEntity<String> addCardToClient(@PathVariable(value = "clientId") Long clientId,
-                                                  @PathVariable(value = "cardId") Long cardId) {
+                                                  @PathVariable(value = "cardId") Long cardId) throws CardAlreadyAttachedException {
         clientService.addCardToClient(cardId, clientId);
         return ResponseEntity.ok("now client with id = " + clientId + " has a card with id = " + cardId);
     }

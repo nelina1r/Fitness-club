@@ -1,8 +1,12 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.t1.dedov.dto.ClientDto;
+import ru.t1.dedov.exceptions.CardAlreadyAttachedException;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidTypeException;
 import ru.t1.dedov.mapper.ClientMapper;
@@ -15,9 +19,9 @@ import ru.t1.dedov.model.repository.ClientRepository;
 import ru.t1.dedov.model.repository.ScheduleRepository;
 import ru.t1.dedov.service.interfaces.ClientService;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +31,9 @@ public class ClientServiceImpl implements ClientService {
     private final ScheduleRepository scheduleRepository;
     private final CardRepository cardRepository;
     private final ClientMapper clientMapper;
+
+    @Autowired
+    public LockRegistry lockRegistry;
 
     @Override
     public List<ClientDto> findAll() {
@@ -68,7 +75,10 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public void addCardToClient(Long cardId, Long clientId) {
+    public void addCardToClient(Long cardId, Long clientId) throws CardAlreadyAttachedException {
+        if(cardRepository.getReferenceById(cardId).getClient() != null){
+            throw new CardAlreadyAttachedException("card already attached to another client");
+        }
         Client client = clientRepository.getReferenceById(clientId);
         client.setRole(Role.USER);
         clientRepository.save(client);
@@ -82,16 +92,22 @@ public class ClientServiceImpl implements ClientService {
     public void signClientOnSchedule(Long clientId, Long scheduleId) throws InvalidTypeException, InvalidCapacityException {
         Client client = clientRepository.getReferenceById(clientId);
         Schedule schedule = scheduleRepository.getReferenceById(scheduleId);
-        if(client.getCardSet().stream()
-                        .noneMatch(x -> x.getTrainingTypes()
-                        .contains(schedule.getEmployeeTrainingType().getTrainingType()))){
+        if (client.getCardSet().stream()
+                .noneMatch(x -> x.getTrainingTypes()
+                        .contains(schedule.getEmployeeTrainingType().getTrainingType()))) {
             throw new InvalidTypeException("no approachable training type in your card for this training");
         }
+        Lock lock = lockRegistry.obtain(schedule.getId());
         Set<Client> clientSet = schedule.getClientSet();
-        if (schedule.getPeopleCapacity().compareTo(clientSet.size()) <= 0){ //!
-            throw new InvalidCapacityException("this training is full of clients");
+        lock.lock();
+        try {
+            if (schedule.getPeopleCapacity().compareTo(clientSet.size()) <= 0) {
+                throw new InvalidCapacityException("this training is full of clients");
+            }
+            clientSet.add(client);
+        } finally {
+            lock.unlock();
         }
-        clientSet.add(client);
         scheduleRepository.save(schedule);
     }
 }

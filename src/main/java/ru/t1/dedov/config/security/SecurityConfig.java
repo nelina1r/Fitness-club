@@ -3,6 +3,8 @@ package ru.t1.dedov.config.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.support.locks.DefaultLockRegistry;
+import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +20,12 @@ import ru.t1.dedov.security.jwt.JwtTokenProvider;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+
+    @Bean
+    public LockRegistry lockRegistry() {
+        return new DefaultLockRegistry();
+    }
 
     private final JwtTokenProvider jwtTokenProvider;
 
