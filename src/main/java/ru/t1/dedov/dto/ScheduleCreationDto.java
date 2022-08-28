@@ -1,6 +1,7 @@
 package ru.t1.dedov.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.t1.dedov.model.entity.*;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ScheduleCreationDto {
 
     @JsonIgnore
