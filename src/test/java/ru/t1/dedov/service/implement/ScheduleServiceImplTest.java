@@ -32,5 +32,6 @@ class ScheduleServiceImplTest {
         final ScheduleCreationDto scheduleCreationDto = new ScheduleCreationDto
                 (null, 1L, 1L, 1L, LocalDateTime.of(3000, 1, 1, 10, 10, 10), 45, 10);
         Mockito.verify(employeeTrainingTypeRepository, Mockito.times(1)).exists(Example.of(new EmployeeTrainingType()));
+
     }
 }

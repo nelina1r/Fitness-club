@@ -105,9 +105,9 @@ public class ClientServiceImpl implements ClientService {
                 throw new InvalidCapacityException("this training is full of clients");
             }
             clientSet.add(client);
+            scheduleRepository.save(schedule);
         } finally {
             lock.unlock();
         }
-        scheduleRepository.save(schedule);
     }
 }
