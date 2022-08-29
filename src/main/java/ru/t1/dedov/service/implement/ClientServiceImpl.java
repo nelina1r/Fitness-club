@@ -98,8 +98,8 @@ public class ClientServiceImpl implements ClientService {
             throw new InvalidTypeException("no approachable training type in your card for this training");
         }
         Lock lock = lockRegistry.obtain(schedule.getId());
-        Set<Client> clientSet = schedule.getClientSet();
         lock.lock();
+        Set<Client> clientSet = schedule.getClientSet();
         try {
             if (schedule.getPeopleCapacity().compareTo(clientSet.size()) <= 0) {
                 throw new InvalidCapacityException("this training is full of clients");
