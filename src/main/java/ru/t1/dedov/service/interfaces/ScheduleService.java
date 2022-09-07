@@ -5,6 +5,7 @@ import ru.t1.dedov.dto.ScheduleOutputDto;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidDateTimeException;
 import ru.t1.dedov.exceptions.InvalidRoleException;
+import ru.t1.dedov.model.entity.Schedule;
 
 import java.util.List;
 
@@ -13,8 +14,10 @@ public interface ScheduleService {
 
     ScheduleOutputDto findById(Long id);
 
-    ScheduleOutputDto save(ScheduleCreationDto scheduleDto) throws InvalidDateTimeException, InvalidRoleException, InvalidCapacityException;
+    ScheduleOutputDto save(Schedule schedule) throws InvalidDateTimeException, InvalidRoleException, InvalidCapacityException;
 
-    void editById(Long id, ScheduleCreationDto scheduleDto) throws InvalidDateTimeException, InvalidCapacityException;
+    Schedule parseSchedule(ScheduleCreationDto scheduleCreationDto);
+
+    void editById(Long id, Schedule schedule) throws InvalidDateTimeException, InvalidCapacityException, InvalidRoleException;
     void deleteById(Long id);
 }

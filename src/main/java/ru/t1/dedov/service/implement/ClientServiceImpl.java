@@ -100,6 +100,7 @@ public class ClientServiceImpl implements ClientService {
         Lock lock = lockRegistry.obtain(schedule.getId());
         lock.lock();
         try {
+            //Thread.sleep(1000);
             Set<Client> clientSet = schedule.getClientSet();
             if (schedule.getPeopleCapacity().compareTo(clientSet.size()) <= 0) {
                 throw new InvalidCapacityException("this training is full of clients");

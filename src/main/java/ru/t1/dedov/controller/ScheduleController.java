@@ -26,14 +26,14 @@ public class ScheduleController {
     @ApiOperation("save schedule")
     @PostMapping("/schedule")
     public ResponseEntity<String> saveSchedule(@RequestBody ScheduleCreationDto scheduleDto) throws InvalidDateTimeException, InvalidRoleException, InvalidCapacityException {
-        scheduleService.save(scheduleDto);
+        scheduleService.save(scheduleService.parseSchedule(scheduleDto));
         return ResponseEntity.ok("ok");
     }
 
     @ApiOperation("edit schedule")
     @PutMapping("/schedule/{id}")
-    public ResponseEntity<String> editSchedule(@PathVariable Long id, @RequestBody ScheduleCreationDto scheduleDto) throws InvalidDateTimeException, InvalidCapacityException {
-        scheduleService.editById(id, scheduleDto);
+    public ResponseEntity<String> editSchedule(@PathVariable Long id, @RequestBody ScheduleCreationDto scheduleDto) throws InvalidDateTimeException, InvalidCapacityException, InvalidRoleException {
+        scheduleService.editById(id, scheduleService.parseSchedule(scheduleDto));
         return ResponseEntity.ok("updated");
     }
 

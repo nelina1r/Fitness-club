@@ -49,88 +49,74 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    @Transactional
-    public ScheduleOutputDto save(ScheduleCreationDto scheduleCreationDto) throws InvalidDateTimeException, InvalidRoleException, InvalidCapacityException {
-        Schedule schedule = new Schedule();
-        //
-        EmployeeTrainingType employeeTrainingType = new EmployeeTrainingType();
+    public Schedule parseSchedule(ScheduleCreationDto scheduleCreationDto) {
         Employee employee = employeeRepository.getReferenceById(scheduleCreationDto.getEmployeeId());
+        EmployeeTrainingType employeeTrainingType = new EmployeeTrainingType();
         employeeTrainingType.setEmployee(employee);
         employeeTrainingType.setTrainingType(trainingTypeRepository.getReferenceById(scheduleCreationDto.getTrainingTypeId()));
         if (!employeeTTRepository.exists(Example.of(employeeTrainingType))) {
             employeeTTRepository.save(employeeTrainingType);
         }
-        //
         Gym gym = gymRepository.getReferenceById(scheduleCreationDto.getGymId());
-        //
-        if(crossingDateTimeInScheduleCheck(gym, employee, scheduleCreationDto)){
-            throw new InvalidDateTimeException("dateTime that you picked crosses with other schedule's dateTime");
-        }
-        if (scheduleCreationDto.getTrainingStartDateTime().isBefore(LocalDateTime.now())) {
-            throw new InvalidDateTimeException("trainingStartDateTime must be sooner than now");
-        }
-        if (gym.getPeopleCapacity().compareTo(scheduleCreationDto.getPeopleCapacity()) < 0) {
-            throw new InvalidCapacityException("capacity of gym must be >= than capacity of training");
-        }
-        //
+        Schedule schedule = new Schedule();
         schedule.setGym(gym);
         schedule.setEmployeeTrainingType(employeeTrainingType);
         schedule.setTrainingStartDateTime(scheduleCreationDto.getTrainingStartDateTime());
         schedule.setTrainingDuration(scheduleCreationDto.getTrainingDuration());
         schedule.setPeopleCapacity(scheduleCreationDto.getPeopleCapacity());
+        return schedule;
+    }
+
+    @Override
+    @Transactional
+    public ScheduleOutputDto save(Schedule schedule) throws InvalidDateTimeException, InvalidRoleException, InvalidCapacityException {
+        if(crossingDateTimeInScheduleCheck(schedule)){
+            throw new InvalidDateTimeException("dateTime that you picked crosses with other schedule's dateTime");
+        }
+        if (schedule.getTrainingStartDateTime().isBefore(LocalDateTime.now())) {
+            throw new InvalidDateTimeException("trainingStartDateTime must be sooner than now");
+        }
+        if (schedule.getGym().getPeopleCapacity().compareTo(schedule.getPeopleCapacity()) < 0) {
+            throw new InvalidCapacityException("capacity of gym must be >= than capacity of training");
+        }
         scheduleRepository.save(schedule);
         return scheduleMapper.toDto(schedule);
     }
 
-    boolean crossingDateTimeInScheduleCheck(Gym currentGym, Employee currentEmployee, ScheduleCreationDto scheduleDto) {
+    boolean crossingDateTimeInScheduleCheck(Schedule schedule) {
+        Gym currentGym = schedule.getGym();
+        Employee currentEmployee = schedule.getEmployeeTrainingType().getEmployee();
         return scheduleRepository.findAllByGymOrEmployeeTrainingType_Employee(currentGym, currentEmployee)
                 .stream()
                 .anyMatch(x ->
-                        ((scheduleDto.getTrainingStartDateTime().plusMinutes(scheduleDto.getTrainingDuration())
+                        ((schedule.getTrainingStartDateTime().plusMinutes(schedule.getTrainingDuration())
                                 .isAfter(x.getTrainingStartDateTime()))
                                 &&
-                        (scheduleDto.getTrainingStartDateTime().plusMinutes(scheduleDto.getTrainingDuration())
+                        (schedule.getTrainingStartDateTime().plusMinutes(schedule.getTrainingDuration())
                                 .isBefore(x.getTrainingStartDateTime().plusMinutes(x.getTrainingDuration()))))
                 ||
-                        ((scheduleDto.getTrainingStartDateTime()
+                        ((schedule.getTrainingStartDateTime()
                                 .isBefore(x.getTrainingStartDateTime().plusMinutes(x.getTrainingDuration())))
                                 &&
-                        (scheduleDto.getTrainingStartDateTime())
+                        (schedule.getTrainingStartDateTime())
                                 .isAfter(x.getTrainingStartDateTime()))
                 ||
-                        ((scheduleDto.getTrainingStartDateTime()
+                        ((schedule.getTrainingStartDateTime()
                                 .isBefore(x.getTrainingStartDateTime())
                                 &&
-                        (scheduleDto.getTrainingStartDateTime().plusMinutes(scheduleDto.getTrainingDuration())
+                        (schedule.getTrainingStartDateTime().plusMinutes(schedule.getTrainingDuration())
                                 .isAfter(x.getTrainingStartDateTime().plusMinutes(x.getTrainingDuration()))))));
     }
 
     @Override
-    public void editById(Long id, ScheduleCreationDto scheduleCreationDto) throws InvalidDateTimeException, InvalidCapacityException {
-        Schedule schedule = scheduleRepository.getReferenceById(id);
-        EmployeeTrainingType employeeTrainingType = new EmployeeTrainingType();
-        Employee employee = employeeRepository.getReferenceById(scheduleCreationDto.getEmployeeId());
-        employeeTrainingType.setEmployee(employee);
-        employeeTrainingType.setTrainingType(trainingTypeRepository.getReferenceById(scheduleCreationDto.getTrainingTypeId()));
-        if (!employeeTTRepository.exists(Example.of(employeeTrainingType))) {
-            employeeTTRepository.save(employeeTrainingType);
-        }
-        Gym gym = gymRepository.getReferenceById(scheduleCreationDto.getGymId());
-        if(crossingDateTimeInScheduleCheck(gym, employee, scheduleCreationDto)){
-            throw new InvalidDateTimeException("dateTime that you picked crosses with other schedule's dateTime");
-        }
-        if (scheduleCreationDto.getTrainingStartDateTime().isBefore(LocalDateTime.now())) {
-            throw new InvalidDateTimeException("trainingStartDateTime must be sooner than now");
-        }
-        if (gym.getPeopleCapacity().compareTo(scheduleCreationDto.getPeopleCapacity()) < 0) {
-            throw new InvalidCapacityException("capacity of gym must be >= than capacity of training");
-        }
-        schedule.setGym(gym);
-        schedule.setEmployeeTrainingType(employeeTrainingType);
-        schedule.setTrainingStartDateTime(scheduleCreationDto.getTrainingStartDateTime());
-        schedule.setTrainingDuration(scheduleCreationDto.getTrainingDuration());
-        schedule.setPeopleCapacity(scheduleCreationDto.getPeopleCapacity());
-        scheduleRepository.save(schedule);
+    public void editById(Long id, Schedule schedule) throws InvalidDateTimeException, InvalidCapacityException, InvalidRoleException {
+        Schedule currentSchedule = scheduleRepository.getReferenceById(id);
+        currentSchedule.setGym(schedule.getGym());
+        currentSchedule.setPeopleCapacity(schedule.getPeopleCapacity());
+        currentSchedule.setTrainingDuration(schedule.getTrainingDuration());
+        currentSchedule.setTrainingStartDateTime(schedule.getTrainingStartDateTime());
+        currentSchedule.setEmployeeTrainingType(schedule.getEmployeeTrainingType());
+        save(schedule);
     }
 
     @Override
