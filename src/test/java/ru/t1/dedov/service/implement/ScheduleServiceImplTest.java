@@ -32,9 +32,6 @@ class ScheduleServiceImplTest {
     @MockBean
     private ScheduleRepository scheduleRepository;
 
-    @MockBean
-    private EmployeeTrainingTypeRepository employeeTrainingTypeRepository;
-
     @Test
     void save_shouldSaveSuccessfully() throws InvalidRoleException, InvalidDateTimeException, InvalidCapacityException {
         final Schedule schedule = new Schedule();
