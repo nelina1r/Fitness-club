@@ -1,7 +1,10 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +12,7 @@ import ru.t1.dedov.dto.ClientDto;
 import ru.t1.dedov.exceptions.CardAlreadyAttachedException;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidTypeException;
+import ru.t1.dedov.filter.service.implement.ClientFilterService;
 import ru.t1.dedov.mapper.ClientMapper;
 import ru.t1.dedov.model.entity.Card;
 import ru.t1.dedov.model.entity.Client;
@@ -31,16 +35,46 @@ public class ClientServiceImpl implements ClientService {
     private final ScheduleRepository scheduleRepository;
     private final CardRepository cardRepository;
     private final ClientMapper clientMapper;
+    private final ClientFilterService clientFilterService;
 
     @Autowired
     public LockRegistry lockRegistry;
 
     @Override
-    public List<ClientDto> findAll() {
-        return clientRepository.findAll()
-                .stream()
-                .map(clientMapper::toDto)
-                .collect(Collectors.toList());
+    @Transactional
+    public void signClientOnSchedule(Long clientId, Long scheduleId) throws InvalidTypeException, InvalidCapacityException {
+        Client client = clientRepository.getReferenceById(clientId);
+        Schedule schedule = scheduleRepository.getReferenceById(scheduleId);
+        if (client.getCardSet().stream()
+                .noneMatch(x -> x.getTrainingTypes()
+                        .contains(schedule.getEmployeeTrainingType().getTrainingType()))) {
+            throw new InvalidTypeException("no approachable training type in your card for this training");
+        }
+        Lock lock = lockRegistry.obtain(schedule.getId());
+        lock.lock();
+        try {
+            Set<Client> clientSet = schedule.getClientSet();
+            if (schedule.getPeopleCapacity().compareTo(clientSet.size()) <= 0) {
+                throw new InvalidCapacityException("this training is full of clients");
+            }
+            clientSet.add(client);
+            scheduleRepository.save(schedule);
+        } finally {
+            lock.unlock();
+        }
+    }
+    @Override
+    public List<ClientDto> findAll(Specification<Client> spec, String search, Pageable page) {
+        if(StringUtils.isBlank(search))
+            return clientRepository.findAll(spec, page)
+                    .stream()
+                    .map(clientMapper::toDto)
+                    .collect(Collectors.toList());
+        else
+            return clientRepository.findAll(clientFilterService.generateSearchSpecifications(search), page)
+                    .stream()
+                    .map(clientMapper::toDto)
+                    .collect(Collectors.toList());
     }
 
     @Override
@@ -87,27 +121,5 @@ public class ClientServiceImpl implements ClientService {
         cardRepository.save(card);
     }
 
-    @Override
-    @Transactional
-    public void signClientOnSchedule(Long clientId, Long scheduleId) throws InvalidTypeException, InvalidCapacityException {
-        Client client = clientRepository.getReferenceById(clientId);
-        Schedule schedule = scheduleRepository.getReferenceById(scheduleId);
-        if (client.getCardSet().stream()
-                .noneMatch(x -> x.getTrainingTypes()
-                        .contains(schedule.getEmployeeTrainingType().getTrainingType()))) {
-            throw new InvalidTypeException("no approachable training type in your card for this training");
-        }
-        Lock lock = lockRegistry.obtain(schedule.getId());
-        lock.lock();
-        try {
-            Set<Client> clientSet = schedule.getClientSet();
-            if (schedule.getPeopleCapacity().compareTo(clientSet.size()) <= 0) {
-                throw new InvalidCapacityException("this training is full of clients");
-            }
-            clientSet.add(client);
-            scheduleRepository.save(schedule);
-        } finally {
-            lock.unlock();
-        }
-    }
+
 }

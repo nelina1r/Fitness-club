@@ -1,18 +1,19 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.ScheduleCreationDto;
 import ru.t1.dedov.dto.ScheduleOutputDto;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidDateTimeException;
 import ru.t1.dedov.exceptions.InvalidRoleException;
+import ru.t1.dedov.filter.service.implement.ScheduleFilterService;
 import ru.t1.dedov.mapper.ScheduleMapper;
-import ru.t1.dedov.model.entity.Employee;
-import ru.t1.dedov.model.entity.EmployeeTrainingType;
-import ru.t1.dedov.model.entity.Gym;
-import ru.t1.dedov.model.entity.Schedule;
+import ru.t1.dedov.model.entity.*;
 import ru.t1.dedov.model.repository.*;
 import ru.t1.dedov.service.interfaces.ScheduleService;
 
@@ -25,22 +26,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
-
     private final TrainingTypeRepository trainingTypeRepository;
-
     private final EmployeeTrainingTypeRepository employeeTTRepository;
-
     private final GymRepository gymRepository;
-
     private final EmployeeRepository employeeRepository;
     private final ScheduleMapper scheduleMapper;
+    private final ScheduleFilterService scheduleFilterService;
 
     @Override
-    public List<ScheduleOutputDto> findAll() {
-        return scheduleRepository.findAll()
-                .stream()
-                .map(scheduleMapper::toDto)
-                .collect(Collectors.toList());
+    public List<ScheduleOutputDto> findAll(Specification<Schedule> spec, String search, Pageable page) {
+        if(StringUtils.isBlank(search))
+            return scheduleRepository.findAll(spec, page)
+                    .stream()
+                    .map(scheduleMapper::toDto)
+                    .collect(Collectors.toList());
+        else
+            return scheduleRepository.findAll(scheduleFilterService.generateSearchSpecifications(search), page)
+                    .stream()
+                    .map(scheduleMapper::toDto)
+                    .collect(Collectors.toList());
     }
 
     @Override

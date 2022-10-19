@@ -1,6 +1,5 @@
 package ru.t1.dedov.aop;
 
-import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.t1.dedov.model.entity.UserAction;
+import ru.t1.dedov.service.interfaces.MessageSenderService;
 import ru.t1.dedov.service.interfaces.UserActionService;
 
 import java.time.LocalDateTime;
@@ -18,10 +18,12 @@ import java.time.LocalDateTime;
 public class UserActionAspect {
 
     private final UserActionService userActionService;
+    private final MessageSenderService messageSenderService;
 
     @Autowired
-    public UserActionAspect(UserActionService userActionService){
+    public UserActionAspect(UserActionService userActionService, MessageSenderService messageSenderService){
         this.userActionService = userActionService;
+        this.messageSenderService = messageSenderService;
     }
 
     @Pointcut("within(ru.t1.dedov.controller..*)")
@@ -35,6 +37,7 @@ public class UserActionAspect {
         userAction.setUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         userAction.setActionDateTime(LocalDateTime.now());
         userAction.setMethodName(joinPoint.getSignature().getName());
+        messageSenderService.sendMessage("User with username " + SecurityContextHolder.getContext().getAuthentication().getName() + " used " + joinPoint.getSignature().getName() + " method");
         userActionService.saveLog(userAction);
     }
 }

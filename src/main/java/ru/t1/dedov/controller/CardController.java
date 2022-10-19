@@ -2,16 +2,19 @@ package ru.t1.dedov.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.kaczmarzyk.spring.data.jpa.domain.In;
+import net.kaczmarzyk.spring.data.jpa.domain.Like;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.CardDto;
-import ru.t1.dedov.model.entity.enums.Role;
+import ru.t1.dedov.model.entity.Card;
 import ru.t1.dedov.service.interfaces.CardService;
 
 import java.util.List;
-import java.util.Map;
 
 @Api(value = "Card controller")
 @RestController
@@ -32,18 +35,22 @@ public class CardController {
 
     @ApiOperation("edit card")
     @PutMapping("/card/{id}")
-    public ResponseEntity<String> editCard(@PathVariable Long id, @RequestBody CardDto cardDto){
+    public ResponseEntity<String> editCard(@PathVariable Long id, @RequestBody CardDto cardDto) {
         cardService.editById(id, cardDto);
         return ResponseEntity.ok("updated");
     }
 
     @ApiOperation("find all cards")
     @GetMapping("/card")
-    public List<CardDto> findAllCards() {
-        return cardService.findAll();
+    public List<CardDto> findAllCards(
+            @Spec(path = "id", paramSeparator = ',', spec = Like.class) Specification<Card> spec,
+            @RequestParam(value = "search", required = false) String search,
+            @PageableDefault Pageable page
+    ) {
+        return cardService.findAll(spec, search, page);
     }
 
-    @ApiOperation("fin card by id")
+    @ApiOperation("find card by id")
     @GetMapping("/card/{id}")
     public ResponseEntity<CardDto> findCardById(@PathVariable Long id) {
         return ResponseEntity.ok(cardService.findById(id));

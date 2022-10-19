@@ -2,6 +2,12 @@ package ru.t1.dedov.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.kaczmarzyk.spring.data.jpa.domain.In;
+import net.kaczmarzyk.spring.data.jpa.domain.Like;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.ScheduleCreationDto;
@@ -9,6 +15,7 @@ import ru.t1.dedov.dto.ScheduleOutputDto;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidDateTimeException;
 import ru.t1.dedov.exceptions.InvalidRoleException;
+import ru.t1.dedov.model.entity.Schedule;
 import ru.t1.dedov.service.interfaces.ScheduleService;
 
 import java.util.List;
@@ -39,8 +46,12 @@ public class ScheduleController {
 
     @ApiOperation("find all schedules")
     @GetMapping("/schedule")
-    public List<ScheduleOutputDto> findAllSchedules() {
-        return scheduleService.findAll();
+    public List<ScheduleOutputDto> findAllSchedules(
+            @Spec(path = "id", paramSeparator = ',', spec = Like.class) Specification<Schedule> spec,
+            @RequestParam(value = "search", required = false) String search,
+            @PageableDefault Pageable page
+    ) {
+        return scheduleService.findAll(spec, search, page);
     }
 
     @ApiOperation("find schedule by id")

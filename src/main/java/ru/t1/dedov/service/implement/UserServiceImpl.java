@@ -1,16 +1,21 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.PersonRegistrationDto;
 import ru.t1.dedov.dto.UserDto;
 import ru.t1.dedov.exceptions.InvalidTypeException;
+import ru.t1.dedov.filter.service.implement.UserFilterService;
 import ru.t1.dedov.mapper.ClientMapper;
 import ru.t1.dedov.mapper.EmployeeMapper;
 import ru.t1.dedov.mapper.UserMapper;
 import ru.t1.dedov.model.entity.Client;
 import ru.t1.dedov.model.entity.Employee;
+import ru.t1.dedov.model.entity.TrainingType;
 import ru.t1.dedov.model.entity.User;
 import ru.t1.dedov.model.entity.enums.Role;
 import ru.t1.dedov.model.repository.ClientRepository;
@@ -29,9 +34,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final EmployeeRepository employeeRepository;
     private final ClientRepository clientRepository;
-
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final UserFilterService userFilterService;
 
     @Override
     @Transactional
@@ -80,12 +85,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository
-                .findAll()
-                .stream()
-                .map(userMapper::toDto)
-                .collect(Collectors.toList());
+    public List<UserDto> getAllUsers(Specification<User> spec, String search, Pageable page) {
+        if(StringUtils.isBlank(search))
+            return userRepository.findAll(spec, page)
+                    .stream()
+                    .map(userMapper::toDto)
+                    .collect(Collectors.toList());
+        else
+            return userRepository.findAll(userFilterService.generateSearchSpecifications(search), page)
+                    .stream()
+                    .map(userMapper::toDto)
+                    .collect(Collectors.toList());
     }
 
     @Override

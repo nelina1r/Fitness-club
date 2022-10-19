@@ -1,0 +1,176 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 09-10-2022-17-23-create-table-card
+      author: Alexander Dedov
+      changes:
+        - createTable:
+            tableName: card
+            columns:
+              - column:
+                 name: id
+                 type: bigserial
+                 constraints:
+                   primaryKey: true
+              - column:
+                 name: date_of_expiration
+                 type: timestamp
+              - column:
+                 name: date_of_purchase
+                 type: timestamp
+              - column:
+                 name: deleted
+                 type: boolean
+              - column:
+                 name: price
+                 type: numeric(19, 2)
+      rollback:
+        - dropTable:
+            - tableName: card
+
+  - changeSet:
+      id: 09-10-2022-17-24-add-notnull-constraints-table-card
+      author: Alexander Dedov
+      changes:
+        - addNotNullConstraint:
+            tableName: card
+            columnName: date_of_expiration
+            columnDataType: timestamp
+        - addNotNullConstraint:
+            tableName: card
+            columnName: date_of_purchase
+            columnDataType: timestamp
+        - addNotNullConstraint:
+            tableName: card
+            columnName: deleted
+            columnDataType: boolean
+        - addNotNullConstraint:
+            tableName: card
+            columnName: price
+            columnDataType: numeric(19, 2)
+
+  - changeSet:
+      id: 09-10-2022-17-25-create-table-gym
+      author: Alexander Dedov
+      changes:
+        - createTable:
+            tableName: gym
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: deleted
+                  type: boolean
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: people_capacity
+                  type: integer
+      rollback:
+        - dropTable:
+            - tableName: gym
+
+  - changeSet:
+      id: 09-10-2022-17-28-add-notnull-constraints-table-gym
+      author: Alexander Dedov
+      changes:
+        - addNotNullConstraint:
+            tableName: gym
+            columnName: name
+            columnDataType: varchar(255)
+        - addNotNullConstraint:
+            tableName: gym
+            columnName: people_capacity
+            columnDataType: integer
+        - addNotNullConstraint:
+            tableName: gym
+            columnName: deleted
+            columnDataType: boolean
+
+  - changeSet:
+      id: 09-10-2022-17-31-create-table-training_type
+      author: Alexander Dedov
+      changes:
+        - createTable:
+            tableName: training_type
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: deleted
+                  type: boolean
+              - column:
+                  name: name
+                  type: varchar(255)
+      rollback:
+        - dropTable:
+            - tableName: training_type
+
+  - changeSet:
+      id: 09-10-2022-17-34-add-notnull-constraints-table-training_type
+      author: Alexander Dedov
+      changes:
+        - addNotNullConstraint:
+            tableName: training_type
+            columnName: name
+            columnDataType: varchar(255)
+        - addNotNullConstraint:
+            tableName: training_type
+            columnName: deleted
+            columnDataType: boolean
+        - addUniqueConstraint:
+            tableName: training_type
+            columnName: name
+            columnDataType: varchar(255)
+
+  - changeSet:
+      id: 09-10-2022-17-43-create-table-users
+      author: Alexander Dedov
+      changes:
+        - createTable:
+            tableName: training_type
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: deleted
+                  type: boolean
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: role
+                  type: varchar(255)
+              - column:
+                  name: username
+                  type: varchar(255)
+  - changeSet:
+      id: 09-10-2022-17-34-add-notnull-constraints-table-users
+      author: Alexander Dedov
+      changes:
+        - addNotNullConstraint:
+            tableName: users
+            columnName: password
+            columnDataType: varchar(255)
+        - addNotNullConstraint:
+            tableName: users
+            columnName: deleted
+            columnDataType: boolean
+        - addNotNullConstraint:
+            tableName: users
+            columnName: role
+            columnDataType: varchar(255)
+        - addNotNullConstraint:
+            tableName: users
+            columnName: username
+            columnDataType: varchar(255)

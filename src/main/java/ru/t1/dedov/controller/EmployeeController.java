@@ -2,9 +2,16 @@ package ru.t1.dedov.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.kaczmarzyk.spring.data.jpa.domain.In;
+import net.kaczmarzyk.spring.data.jpa.domain.Like;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.EmployeeDto;
+import ru.t1.dedov.model.entity.Employee;
 import ru.t1.dedov.service.interfaces.EmployeeService;
 
 import java.util.List;
@@ -36,14 +43,12 @@ public class EmployeeController {
 
     @ApiOperation("find all employees")
     @GetMapping("/employee")
-    public List<EmployeeDto> findAllEmployees() {
-        return employeeService.findAll();
-    }
-
-    @ApiOperation("find employee by id")
-    @GetMapping("/employee/{id}")
-    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable Long id) {
-        return ResponseEntity.ok(employeeService.findById(id));
+    public List<EmployeeDto> findAllEmployees(
+            @Spec(path = "id", paramSeparator = ',', spec = Like.class) Specification<Employee> spec,
+            @RequestParam(value = "search", required = false) String search,
+            @PageableDefault Pageable page
+    ) {
+        return employeeService.findAll(spec, search, page);
     }
 
     @ApiOperation("delete employee by id")
@@ -52,4 +57,12 @@ public class EmployeeController {
         employeeService.deleteById(id);
         return ResponseEntity.ok("deleted");
     }
+    
+    @ApiOperation("find employee by id")
+    @GetMapping("/employee/{id}")
+    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable Long id) {
+        return ResponseEntity.ok(employeeService.findById(id));
+    }
+
+
 }

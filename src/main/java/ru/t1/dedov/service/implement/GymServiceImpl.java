@@ -1,9 +1,14 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.GymDto;
+import ru.t1.dedov.filter.service.implement.GymFilterService;
 import ru.t1.dedov.mapper.GymMapper;
+import ru.t1.dedov.model.entity.Card;
 import ru.t1.dedov.model.entity.Gym;
 import ru.t1.dedov.model.repository.GymRepository;
 import ru.t1.dedov.service.interfaces.GymService;
@@ -16,13 +21,20 @@ import java.util.stream.Collectors;
 public class GymServiceImpl implements GymService {
     private final GymRepository gymRepository;
     private final GymMapper gymMapper;
+    private final GymFilterService gymFilterService;
 
     @Override
-    public List<GymDto> findAll() {
-        return gymRepository.findAll()
-                .stream()
-                .map(gymMapper::toDto)
-                .collect(Collectors.toList());
+    public List<GymDto> findAll(Specification<Gym> spec, String search, Pageable page) {
+        if(StringUtils.isBlank(search))
+            return gymRepository.findAll(spec, page)
+                    .stream()
+                    .map(gymMapper::toDto)
+                    .collect(Collectors.toList());
+        else
+            return gymRepository.findAll(gymFilterService.generateSearchSpecifications(search), page)
+                    .stream()
+                    .map(gymMapper::toDto)
+                    .collect(Collectors.toList());
     }
 
     @Override

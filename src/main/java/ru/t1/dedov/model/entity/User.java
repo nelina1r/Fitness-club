@@ -11,13 +11,15 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name = "users")
+
+
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "users")
 @SQLDelete(sql = "UPDATE card SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -38,7 +40,7 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Field(value = "user_deleted")
+    @Column(name = "deleted", nullable = false)
     private boolean deleted = Boolean.FALSE;
 
     @Override

@@ -1,8 +1,12 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.EmployeeDto;
+import ru.t1.dedov.filter.service.implement.EmployeeFilterService;
 import ru.t1.dedov.mapper.EmployeeMapper;
 import ru.t1.dedov.model.entity.Employee;
 import ru.t1.dedov.model.repository.EmployeeRepository;
@@ -18,13 +22,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final TrainingTypeRepository trainingTypeRepository;
     private final EmployeeMapper employeeMapper;
+    private final EmployeeFilterService employeeFilterService;
 
     @Override
-    public List<EmployeeDto> findAll() {
-        return employeeRepository.findAll()
-                .stream()
-                .map(employeeMapper::toDto)
-                .collect(Collectors.toList());
+    public List<EmployeeDto> findAll(Specification<Employee> spec, String search, Pageable page) {
+        if(StringUtils.isBlank(search))
+            return employeeRepository.findAll(spec, page)
+                    .stream()
+                    .map(employeeMapper::toDto)
+                    .collect(Collectors.toList());
+        else
+            return employeeRepository.findAll(employeeFilterService.generateSearchSpecifications(search), page)
+                    .stream()
+                    .map(employeeMapper::toDto)
+                    .collect(Collectors.toList());
     }
 
     @Override

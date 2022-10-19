@@ -1,8 +1,12 @@
 package ru.t1.dedov.service.implement;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.t1.dedov.dto.CardDto;
+import ru.t1.dedov.filter.service.implement.CardFilterService;
 import ru.t1.dedov.mapper.CardMapper;
 import ru.t1.dedov.model.entity.Card;
 import ru.t1.dedov.model.entity.TrainingType;
@@ -21,13 +25,20 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final TrainingTypeRepository trainingTypeRepository;
     private final CardMapper cardMapper;
+    private final CardFilterService cardFilterService;
 
     @Override
-    public List<CardDto> findAll() {
-        return cardRepository.findAll()
-                .stream()
-                .map(cardMapper::toDto)
-                .collect(Collectors.toList());
+    public List<CardDto> findAll(Specification<Card> spec, String search, Pageable page) {
+        if(StringUtils.isBlank(search))
+            return cardRepository.findAll(spec, page)
+                    .stream()
+                    .map(cardMapper::toDto)
+                    .collect(Collectors.toList());
+        else
+            return cardRepository.findAll(cardFilterService.generateSearchSpecifications(search), page)
+                    .stream()
+                    .map(cardMapper::toDto)
+                    .collect(Collectors.toList());
     }
 
     @Override
