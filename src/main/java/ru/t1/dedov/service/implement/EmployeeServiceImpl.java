@@ -25,9 +25,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeFilterService employeeFilterService;
 
     @Override
-    public List<EmployeeDto> findAll(Specification<Employee> spec, String search, Pageable page) {
+    public List<EmployeeDto> findAll(String search, Pageable page) {
         if(StringUtils.isBlank(search))
-            return employeeRepository.findAll(spec, page)
+            return employeeRepository.findAll(page)
                     .stream()
                     .map(employeeMapper::toDto)
                     .collect(Collectors.toList());

@@ -25,9 +25,9 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
     private final TrainingTypeFilterService trainingTypeFilterService;
 
     @Override
-    public List<TrainingTypeDto> findAll(Specification<TrainingType> spec, String search, Pageable page) {
+    public List<TrainingTypeDto> findAll(String search, Pageable page) {
         if(StringUtils.isBlank(search))
-            return trainingTypeRepository.findAll(spec, page)
+            return trainingTypeRepository.findAll(page)
                     .stream()
                     .map(trainingTypeMapper::toDto)
                     .collect(Collectors.toList());

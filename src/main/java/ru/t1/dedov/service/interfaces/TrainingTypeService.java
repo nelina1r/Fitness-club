@@ -8,7 +8,7 @@ import ru.t1.dedov.model.entity.TrainingType;
 import java.util.List;
 
 public interface TrainingTypeService {
-    List<TrainingTypeDto> findAll(Specification<TrainingType> spec, String search, Pageable page);
+    List<TrainingTypeDto> findAll(String search, Pageable page);
 
     TrainingTypeDto findById(Long id);
 

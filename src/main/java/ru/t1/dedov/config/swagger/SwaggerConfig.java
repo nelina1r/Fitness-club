@@ -1,6 +1,5 @@
 package ru.t1.dedov.config.swagger;
 
-import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -29,7 +28,6 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new SpecificationArgumentResolver());
         argumentResolvers.add(new PageableHandlerMethodArgumentResolver());
     }
 }

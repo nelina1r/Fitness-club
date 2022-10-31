@@ -30,4 +30,6 @@ jwt-token:
   durability: 3600000
 kafka:
   bootstrapAddress: localhost:9092
-  topicName: Fitness
+  firstTopicName: Fitness
+  secondTopicName: Reply
+  groupId: base

@@ -8,7 +8,7 @@ import ru.t1.dedov.model.entity.Employee;
 import java.util.List;
 
 public interface EmployeeService {
-    List<EmployeeDto> findAll(Specification<Employee> spec, String search, Pageable page);
+    List<EmployeeDto> findAll(String search, Pageable page);
 
     EmployeeDto findById(Long id);
 

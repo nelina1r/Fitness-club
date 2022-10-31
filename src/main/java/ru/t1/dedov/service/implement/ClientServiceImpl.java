@@ -64,9 +64,9 @@ public class ClientServiceImpl implements ClientService {
         }
     }
     @Override
-    public List<ClientDto> findAll(Specification<Client> spec, String search, Pageable page) {
+    public List<ClientDto> findAll(String search, Pageable page) {
         if(StringUtils.isBlank(search))
-            return clientRepository.findAll(spec, page)
+            return clientRepository.findAll(page)
                     .stream()
                     .map(clientMapper::toDto)
                     .collect(Collectors.toList());

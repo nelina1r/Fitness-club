@@ -14,7 +14,7 @@ public interface UserService {
 
     void register(PersonRegistrationDto personRegistrationDto) throws InvalidTypeException;
 
-    List<UserDto> getAllUsers(Specification<User> spec, String search, Pageable page);
+    List<UserDto> getAllUsers(String search, Pageable page);
 
     void giveUserAdminRights(Long id);
 

@@ -8,7 +8,7 @@ import ru.t1.dedov.model.entity.Card;
 import java.util.List;
 
 public interface CardService {
-    List<CardDto> findAll(Specification<Card> spec, String search, Pageable page);
+    List<CardDto> findAll(String search, Pageable page);
 
     CardDto findById(Long id);
 

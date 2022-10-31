@@ -2,16 +2,11 @@ package ru.t1.dedov.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.kaczmarzyk.spring.data.jpa.domain.In;
-import net.kaczmarzyk.spring.data.jpa.domain.Like;
-import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.dedov.dto.TrainingTypeDto;
-import ru.t1.dedov.model.entity.TrainingType;
 import ru.t1.dedov.service.interfaces.TrainingTypeService;
 
 import java.util.List;
@@ -37,11 +32,10 @@ public class TrainingTypeController {
     @ApiOperation("find add training types")
     @GetMapping("/trainingType")
     public List<TrainingTypeDto> findAllTrainingTypes(
-            @Spec(path = "id", paramSeparator = ',', spec = Like.class) Specification<TrainingType> spec,
             @RequestParam(value = "search", required = false) String search,
             @PageableDefault Pageable page
     ) {
-        return trainingTypeService.findAll(spec, search, page);
+        return trainingTypeService.findAll(search, page);
     }
 
     @ApiOperation("find training type by id")

@@ -15,7 +15,7 @@ public class KafkaTopicConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
-    @Value(value = "${kafka.topicName}")
+    @Value(value = "${kafka.firstTopicName}")
     private String topicName;
 
     @Bean

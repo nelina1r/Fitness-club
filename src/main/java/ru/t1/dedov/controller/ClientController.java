@@ -2,11 +2,7 @@ package ru.t1.dedov.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.kaczmarzyk.spring.data.jpa.domain.In;
-import net.kaczmarzyk.spring.data.jpa.domain.Like;
-import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +10,6 @@ import ru.t1.dedov.dto.ClientDto;
 import ru.t1.dedov.exceptions.CardAlreadyAttachedException;
 import ru.t1.dedov.exceptions.InvalidCapacityException;
 import ru.t1.dedov.exceptions.InvalidTypeException;
-import ru.t1.dedov.model.entity.Client;
 import ru.t1.dedov.service.interfaces.ClientService;
 
 import java.util.List;
@@ -62,11 +57,10 @@ public class ClientController {
     @ApiOperation("find all clients")
     @GetMapping("/client")
     public List<ClientDto> findAllClients(
-            @Spec(path = "id", paramSeparator = ',', spec = Like.class) Specification<Client> spec,
             @RequestParam(value = "search", required = false) String search,
             @PageableDefault Pageable page
     ) {
-        return clientService.findAll(spec, search, page);
+        return clientService.findAll(search, page);
     }
 
     @ApiOperation("find client by id")

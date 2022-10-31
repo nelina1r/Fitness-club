@@ -85,9 +85,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers(Specification<User> spec, String search, Pageable page) {
+    public List<UserDto> getAllUsers(String search, Pageable page) {
         if(StringUtils.isBlank(search))
-            return userRepository.findAll(spec, page)
+            return userRepository.findAll(page)
                     .stream()
                     .map(userMapper::toDto)
                     .collect(Collectors.toList());

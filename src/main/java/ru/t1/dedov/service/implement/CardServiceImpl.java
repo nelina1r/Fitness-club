@@ -28,9 +28,9 @@ public class CardServiceImpl implements CardService {
     private final CardFilterService cardFilterService;
 
     @Override
-    public List<CardDto> findAll(Specification<Card> spec, String search, Pageable page) {
+    public List<CardDto> findAll(String search, Pageable page) {
         if(StringUtils.isBlank(search))
-            return cardRepository.findAll(spec, page)
+            return cardRepository.findAll(page)
                     .stream()
                     .map(cardMapper::toDto)
                     .collect(Collectors.toList());

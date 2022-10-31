@@ -12,7 +12,7 @@ import ru.t1.dedov.model.entity.Schedule;
 import java.util.List;
 
 public interface ScheduleService {
-    List<ScheduleOutputDto> findAll(Specification<Schedule> spec, String search, Pageable page);
+    List<ScheduleOutputDto> findAll(String search, Pageable page);
 
     ScheduleOutputDto findById(Long id);
 

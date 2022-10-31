@@ -8,7 +8,7 @@ import ru.t1.dedov.model.entity.Gym;
 import java.util.List;
 
 public interface GymService {
-    List<GymDto> findAll(Specification<Gym> spec, String search, Pageable page);
+    List<GymDto> findAll(String search, Pageable page);
 
     GymDto findById(Long id);
 

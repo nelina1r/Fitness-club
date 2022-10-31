@@ -11,7 +11,7 @@ import ru.t1.dedov.model.entity.Client;
 import java.util.List;
 
 public interface ClientService {
-    List<ClientDto> findAll(Specification<Client> spec, String search, Pageable page);
+    List<ClientDto> findAll(String search, Pageable page);
 
     ClientDto findById(Long id);
 

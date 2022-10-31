@@ -14,7 +14,7 @@ public class MessageSenderServiceImpl implements MessageSenderService {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    @Value(value = "${kafka.topicName}")
+    @Value(value = "${kafka.firstTopicName}")
     private String topicName;
 
     @Override

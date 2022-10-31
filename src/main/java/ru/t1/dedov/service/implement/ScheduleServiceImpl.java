@@ -34,9 +34,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleFilterService scheduleFilterService;
 
     @Override
-    public List<ScheduleOutputDto> findAll(Specification<Schedule> spec, String search, Pageable page) {
+    public List<ScheduleOutputDto> findAll(String search, Pageable page) {
         if(StringUtils.isBlank(search))
-            return scheduleRepository.findAll(spec, page)
+            return scheduleRepository.findAll(page)
                     .stream()
                     .map(scheduleMapper::toDto)
                     .collect(Collectors.toList());

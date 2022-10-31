@@ -24,9 +24,9 @@ public class GymServiceImpl implements GymService {
     private final GymFilterService gymFilterService;
 
     @Override
-    public List<GymDto> findAll(Specification<Gym> spec, String search, Pageable page) {
+    public List<GymDto> findAll(String search, Pageable page) {
         if(StringUtils.isBlank(search))
-            return gymRepository.findAll(spec, page)
+            return gymRepository.findAll(page)
                     .stream()
                     .map(gymMapper::toDto)
                     .collect(Collectors.toList());
